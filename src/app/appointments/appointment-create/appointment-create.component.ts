@@ -30,11 +30,11 @@ export class AppointmentCreateComponent {
   });
 
   userIdsForm = new FormGroup({
-    patientId: new FormControl(null, [
+    patientId: new FormControl(0, [
       Validators.required,
       Validators.min(1)
     ]),
-    doctorId: new FormControl(null, [
+    doctorId: new FormControl(0, [
       Validators.required,
       Validators.min(1)
     ])
@@ -76,7 +76,13 @@ export class AppointmentCreateComponent {
           next: (appointment: Appointment) => {
             this.appointmentState.addAppointment(appointment);
 
-            let patientAppointmentRequest: CreateUserAppointmentRequest = {appointmentId: appointment.id, userId: this.userIdsForm.value.patientId};
+            let userAppointmentRequests: CreateUserAppointmentRequest[] = [
+              {appointmentId: appointment.id, userId: this.userIdsForm.value.patientId as number},
+              {appointmentId: appointment.id, userId: this.userIdsForm.value.patientId as number}
+            ]
+            userAppointmentRequests.forEach(uar => {
+              this.createUserAppointment(uar)
+            })
 
             this.navigateToAppointments()
           },
