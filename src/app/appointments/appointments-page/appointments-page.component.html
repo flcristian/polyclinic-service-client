@@ -1,8 +1,8 @@
-<div style="display: flex; flex-direction: column; gap: 20px" *ngIf="!(appointmentState.loading$ | async) && !(appointmentState.error$ | async)">
+<ng-container *ngIf="appointmentState.state$ | async as state">
+<div style="display: flex; flex-direction: column; gap: 20px" *ngIf="!state.loading && !state.error">
   <div>
     <h1>Appointments</h1>
-    <ng-container *ngIf="appointmentState.appointments$ | async as appointments">
-      <p-table [value]="appointments" [tableStyle]="{'max-width': '50rem'}">
+      <p-table [value]="state.appointments" [tableStyle]="{'max-width': '50rem'}">
         <ng-template pTemplate="header">
           <tr>
             <th>Id</th>
@@ -19,13 +19,12 @@
 
         </ng-template>
       </p-table>
-    </ng-container>
   </div>
   <p-button (click)="navigateToAppointmentCreation()">Create new appointment</p-button>
 </div>
 
 <p-toast></p-toast>
-<p-progressSpinner *ngIf="(appointmentState.loading$ | async)"></p-progressSpinner>
-
+<p-progressSpinner *ngIf="state.loading"></p-progressSpinner>
+</ng-container>
 
 

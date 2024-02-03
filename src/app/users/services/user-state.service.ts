@@ -1,56 +1,63 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {User} from "../models/user.model";
+import {UserState} from "./user-state";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserStateService {
-  private usersSubject = new BehaviorSubject<User[]>([]);
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  private errorSubject = new BehaviorSubject<string | null>(null);
-  users$: Observable<User[]> = this.usersSubject.asObservable();
-  loading$: Observable<boolean> = this.loadingSubject.asObservable();
-  error$: Observable<string | null> = this.errorSubject.asObservable();
+  private stateSubject = new BehaviorSubject<UserState>({
+    users: [],
+    loading: false,
+    error: null
+  });
+  state$: Observable<UserState> = this.stateSubject.asObservable();
 
   constructor() { }
 
   setUsers(users: User[]) {
-    this.usersSubject.next(users);
+    this.setState({users})
   }
 
   addUser(newUser: User) {
-    this.usersSubject.next([...this.usersSubject.value, newUser]);
+    let users: User[] = [...this.stateSubject.value.users, newUser]
+    this.setState({users})
   }
 
   updateUser(user: User){
-    let users: User[] = this.usersSubject.value;
-    let newUsers: User[] = []
+    let oldUsers: User[] = this.stateSubject.value.users;
+    let users: User[] = []
 
-    users.forEach(p => {
-      if(p.id != user.id) newUsers.push(p)
-      else newUsers.push(user)
+    oldUsers.forEach(p => {
+      if(p.id != user.id) users.push(p)
+      else users.push(user)
     })
 
-    this.usersSubject.next(newUsers)
+    this.setState({users})
   }
 
   deleteUser(user: User){
-    let users: User[] = this.usersSubject.value;
-    let newUsers: User[] = []
+    let oldUsers: User[] = this.stateSubject.value.users
+    let users: User[] = []
 
-    users.forEach(p => {
-      if(p.id != user.id) newUsers.push(p)
+    oldUsers.forEach(p => {
+      if(p.id != user.id) users.push(p)
     })
 
-    this.usersSubject.next(newUsers)
+    this.setState({users})
   }
 
   setLoading(loading: boolean) {
-    this.loadingSubject.next(loading);
+    this.setState({loading})
   }
 
   setError(error: string | null) {
-    this.errorSubject.next(error);
+    this.setState({error});
+  }
+
+  setState(partialState: Partial<UserState>){
+    this.stateSubject.next({...this.stateSubject.value,...partialState})
   }
 }

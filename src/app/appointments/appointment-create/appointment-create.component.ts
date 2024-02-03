@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Confirmation, ConfirmationService} from "primeng/api";
 import {Appointment} from "../models/appointment.model";
@@ -11,13 +11,22 @@ import {CreateUserAppointmentRequest} from "../../user-appointments/models/creat
 import {UserAppointmentService} from "../../user-appointments/services/user-appointment.service";
 import {UserAppointmentStateService} from "../../user-appointments/services/user-appointment-state.service";
 import {UserAppointment} from "../../user-appointments/models/user-appointment.model";
+import {UserService} from "../../users/services/user.service";
+import {UserStateService} from "../../users/services/user-state.service";
+import {User} from "../../users/models/user.model";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-appointment-create',
   templateUrl: './appointment-create.component.html',
   styleUrl: './appointment-create.component.sass'
 })
-export class AppointmentCreateComponent {
+export class AppointmentCreateComponent implements OnDestroy {
+  private subscriptions = new Subscription()
+  protected patientId: number = 0
+  protected patient: User | null = null
+  protected doctorId: number = 0
+  protected doctor: User | null = null
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
   appointmentForm = new FormGroup({
@@ -32,17 +41,18 @@ export class AppointmentCreateComponent {
   userIdsForm = new FormGroup({
     patientId: new FormControl(0, [
       Validators.required,
-      Validators.min(1)
+      Validators.min(1),
     ]),
     doctorId: new FormControl(0, [
       Validators.required,
-      Validators.min(1)
+      Validators.min(1),
     ])
   });
 
   constructor(
     public appointmentService: AppointmentService,
     public appointmentState: AppointmentStateService,
+    public userService: UserService,
     public userAppointmentService: UserAppointmentService,
     public userAppointmentState: UserAppointmentStateService,
     private router: Router,
@@ -102,5 +112,37 @@ export class AppointmentCreateComponent {
 
   rejectCreate() {
     this.confirmPopup.reject()
+  }
+
+  onPatientIdUpdate(){
+    this.patientId = this.userIdsForm.value.patientId as number
+    this.patient = null
+    if(this.patientId > 0){
+      this.subscriptions.add(
+        this.userService.getUser(this.patientId).subscribe({
+          next: (user: User) => {
+            this.patient = user
+          }
+        })
+      )
+    }
+  }
+
+  onDoctorIdUpdate(){
+    this.doctorId = this.userIdsForm.value.doctorId as number
+    this.doctor = null
+    if(this.doctorId > 0){
+      this.subscriptions.add(
+        this.userService.getUser(this.doctorId).subscribe({
+          next: (user: User) => {
+            this.doctor = user
+          }
+        })
+      )
+    }
+  }
+
+  ngOnDestroy(){
+    this.subscriptions.unsubscribe()
   }
 }

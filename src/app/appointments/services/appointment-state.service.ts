@@ -1,56 +1,63 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {Appointment} from "../models/appointment.model";
+import {AppointmentState} from "./appointment-state";
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AppointmentStateService {
-  private appointmentsSubject = new BehaviorSubject<Appointment[]>([]);
-  private loadingSubject = new BehaviorSubject<boolean>(false);
-  private errorSubject = new BehaviorSubject<string | null>(null);
-  appointments$: Observable<Appointment[]> = this.appointmentsSubject.asObservable();
-  loading$: Observable<boolean> = this.loadingSubject.asObservable();
-  error$: Observable<string | null> = this.errorSubject.asObservable();
+  private stateSubject = new BehaviorSubject<AppointmentState>({
+    appointments: [],
+    loading: false,
+    error: null
+  });
+  state$: Observable<AppointmentState> = this.stateSubject.asObservable();
 
   constructor() { }
 
   setAppointments(appointments: Appointment[]) {
-    this.appointmentsSubject.next(appointments);
+    this.setState({appointments})
   }
 
   addAppointment(newAppointment: Appointment) {
-    this.appointmentsSubject.next([...this.appointmentsSubject.value, newAppointment]);
+    let appointments: Appointment[] = [...this.stateSubject.value.appointments, newAppointment]
+    this.setState({appointments})
   }
 
   updateAppointment(appointment: Appointment){
-    let appointments: Appointment[] = this.appointmentsSubject.value;
-    let newAppointments: Appointment[] = []
+    let oldAppointments: Appointment[] = this.stateSubject.value.appointments;
+    let appointments: Appointment[] = []
 
-    appointments.forEach(p => {
-      if(p.id != appointment.id) newAppointments.push(p)
-      else newAppointments.push(appointment)
+    oldAppointments.forEach(p => {
+      if(p.id != appointment.id) appointments.push(p)
+      else appointments.push(appointment)
     })
 
-    this.appointmentsSubject.next(newAppointments)
+    this.setState({appointments})
   }
 
   deleteAppointment(appointment: Appointment){
-    let appointments: Appointment[] = this.appointmentsSubject.value;
-    let newAppointments: Appointment[] = []
+    let oldAppointments: Appointment[] = this.stateSubject.value.appointments
+    let appointments: Appointment[] = []
 
-    appointments.forEach(p => {
-      if(p.id != appointment.id) newAppointments.push(p)
+    oldAppointments.forEach(p => {
+      if(p.id != appointment.id) appointments.push(p)
     })
 
-    this.appointmentsSubject.next(newAppointments)
+    this.setState({appointments})
   }
 
   setLoading(loading: boolean) {
-    this.loadingSubject.next(loading);
+    this.setState({loading})
   }
 
   setError(error: string | null) {
-    this.errorSubject.next(error);
+    this.setState({error});
+  }
+
+  setState(partialState: Partial<AppointmentState>){
+    this.stateSubject.next({...this.stateSubject.value,...partialState})
   }
 }
