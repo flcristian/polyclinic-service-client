@@ -47,4 +47,8 @@ export class AppointmentsPageComponent implements OnInit, OnDestroy {
   navigateToAppointment(id: number) {
     this.router.navigate([`/appointment`, id])
   }
+
+  navigateToAppointmentCreation() {
+    this.router.navigate([`/create-appointment`])
+  }
 }

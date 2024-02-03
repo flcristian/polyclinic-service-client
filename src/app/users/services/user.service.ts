@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import {UserStateService} from "./user-state.service";
 import {HttpClient} from "@angular/common/http";
-import {User} from "../models/user.model";
 import {Observable} from "rxjs";
+import {User} from "../models/user.model";
+import {CreateUserRequest} from "../models/create-user-request.model";
+import {UpdateUserRequest} from "../models/update-user-request.model";
 
 @Injectable({
   providedIn: 'root'
@@ -20,5 +22,17 @@ export class UserService {
   getUser(userId: number): Observable<User> {
     this.userState.setLoading(true)
     return this.http.get<User>(this.server + `/user/${userId}`)
+  }
+
+  createUser(newUser: CreateUserRequest): Observable<User> {
+    return this.http.post<User>(`${this.server}/create`, newUser)
+  }
+
+  updateUser(updatedUser: UpdateUserRequest): Observable<User> {
+    return this.http.put<User>(`${this.server}/update`, updatedUser)
+  }
+
+  deleteUser(id: number): Observable<User> {
+    return this.http.delete<User>(`${this.server}/delete/${id}`)
   }
 }

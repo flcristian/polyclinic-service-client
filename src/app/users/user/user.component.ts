@@ -11,28 +11,16 @@ import {Subscription} from "rxjs";
   styleUrl: './user.component.sass'
 })
 export class UserComponent implements OnInit, OnDestroy {
-  @Input() forcedUserId: number = -1;
   private subscriptions = new Subscription()
-  protected userId: number = -1
+  @Input()  userId: number = -1
   protected user: User | null = null
 
   constructor(
     public userService: UserService,
     public userState: UserStateService,
-    private router: Router,
-    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    if(this.forcedUserId === -1) {
-      this.route.params.subscribe((params: Params) => {
-        this.userId = params[0]
-      })
-    }
-    else{
-      this.userId = this.forcedUserId
-    }
-
     this.subscriptions.add(
       this.userService.getUser(this.userId).subscribe({
         next: (user) => {

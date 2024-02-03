@@ -1,0 +1,45 @@
+<form style="display: flex; flex-direction: column; gap: 10px" [formGroup]="appointmentForm">
+  <h3>Appointment Details</h3>
+  <div class="form-control-container">
+    <label for="startDate">Start Date</label>
+    <input class="form-control w-25" type="datetime-local" formControlName="startDate" id="startDate">
+    <p-message *ngIf="appointmentForm.get('startDate')?.touched&&appointmentForm.get('startDate')!.hasError('required')" severity="error" text="Start date is required."></p-message>
+  </div>
+  <div class="form-control-container">
+    <label for="endDate">End Date</label>
+    <input class="form-control w-25" type="datetime-local" formControlName="endDate" id="endDate">
+    <p-message *ngIf="appointmentForm.get('endDate')?.touched&&appointmentForm.get('endDate')!.hasError('required')" severity="error" text="End date is required."></p-message>
+  </div>
+</form>
+
+<form style="display: flex; flex-direction: column; gap: 10px" [formGroup]="userIdsForm">
+  <h3>User Details</h3>
+  <div class="form-control-container">
+    <label for="patientId">Patient Id</label>
+    <input class="form-control w-25" type="number" formControlName="patientId" id="patientId">
+    <p-message *ngIf="userIdsForm.get('patientId')?.touched&&userIdsForm.get('patientId')!.hasError('required')" severity="error" text="Patient id is required."></p-message>
+    <p-message *ngIf="userIdsForm.get('patientId')?.touched&&userIdsForm.get('patientId')!.hasError('min')" severity="error" text="Patient id must be positive."></p-message>
+  </div>
+  <div class="form-control-container">
+    <label for="doctorId">Doctor Id</label>
+    <input class="form-control w-25" type="number" formControlName="doctorId" id="doctorId">
+    <p-message *ngIf="userIdsForm.get('doctorId')?.touched&&userIdsForm.get('doctorId')!.hasError('required')" severity="error" text="Doctor id is required."></p-message>
+    <p-message *ngIf="userIdsForm.get('doctorId')?.touched&&userIdsForm.get('doctorId')!.hasError('min')" severity="error" text="Doctor id must be positive."></p-message>
+  </div>
+</form>
+
+<section style="display: flex; gap: 10px">
+  <p-confirmPopup>
+    <ng-template pTemplate="headless" let-message>
+      <div class="bg-gray-900 text-white border-round p-3">
+        <span>{{ message.message }}</span>
+        <div class="flex align-items-center gap-2 mt-3">
+          <button (click)="acceptCreate()" pButton label="Create" class="p-button-sm p-button-outlined"></button>
+          <button (click)="rejectCreate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+        </div>
+      </div>
+    </ng-template>
+  </p-confirmPopup>
+  <p-button [disabled]="appointmentForm.invalid || userIdsForm.invalid" severity="success" [rounded]="true" (click)="createAppointment($event)">Create</p-button>
+  <p-button [rounded]="true" (click)="navigateToAppointments()">Cancel</p-button>
+</section>

@@ -1,21 +1,5 @@
-<div style="display: flex; gap: 50px">
-  <div>
-    <div *ngIf="appointment">
-      <h1>Appointment Id {{appointment.id}}</h1>
-      <p>Start Date: {{appointment.startDate}}</p>
-      <p>End Date: {{appointment.endDate}}</p>
-    </div>
-
-    <div>
-      <p-button [disabled]="appointmentForm.invalid" type="submit" severity="success" [rounded]="true">Update</p-button>
-      <p-button (click)="navigateToAppointments()" [rounded]="true">Cancel</p-button>
-      <p-button (click)="deleteAppointment()" severity="danger" [rounded]="true">Delete</p-button>
-    </div>
-  </div>
-
-  <div *ngIf="appointment && appointment.userAppointments">
-    <app-user [forcedUserId]="appointment.userAppointments[0].userId"></app-user>
-    <app-user [forcedUserId]="appointment.userAppointments[1].userId"></app-user>
-  </div>
+<div *ngIf="appointment">
+  <h1>Appointment Id {{appointment.id}}</h1>
+  <p>Start Date: {{appointment.startDate}}</p>
+  <p>End Date: {{appointment.endDate}}</p>
 </div>
-<p-toast></p-toast>

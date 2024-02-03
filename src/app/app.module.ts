@@ -13,19 +13,25 @@ import {MessageModule} from "primeng/message";
 import {RippleModule} from "primeng/ripple";
 import {MessagesModule} from "primeng/messages";
 import {ToastModule} from "primeng/toast";
-import {MessageService} from "primeng/api";
+import {ConfirmationService, MessageService} from "primeng/api";
 import {HttpErrorInterceptor} from "./interceptors/http-error.interceptor";
 import {AppointmentsPageComponent} from "./appointments/appointments-page/appointments-page.component";
 import {AppointmentComponent} from "./appointments/appointment/appointment.component";
 import { UserComponent } from './users/user/user.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { AppointmentViewComponent } from './appointments/appointment-view/appointment-view.component';
+import {ToggleButtonModule} from "primeng/togglebutton";
+import { AppointmentCreateComponent } from './appointments/appointment-create/appointment-create.component';
+import {ConfirmPopupModule} from "primeng/confirmpopup";
 
 @NgModule({
   declarations: [
     AppComponent,
     AppointmentsPageComponent,
     AppointmentComponent,
-    UserComponent
+    UserComponent,
+    AppointmentViewComponent,
+    AppointmentCreateComponent
   ],
   imports: [
     BrowserModule,
@@ -43,9 +49,12 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     MessageModule,
     MessagesModule,
     ToastModule,
-    TableModule
+    TableModule,
+    ToggleButtonModule,
+    ConfirmPopupModule
   ],
   providers: [
+    ConfirmationService,
     MessageService,
     {
       provide:HTTP_INTERCEPTORS,

@@ -3,6 +3,8 @@ import {AppointmentStateService} from "./appointment-state.service";
 import {HttpClient} from "@angular/common/http";
 import {Appointment} from "../models/appointment.model";
 import {Observable} from "rxjs";
+import {CreateAppointmentRequest} from "../models/create-appointment-request.model";
+import {UpdateAppointmentRequest} from "../models/update-appointment-request.model";
 
 @Injectable({
   providedIn: 'root'
