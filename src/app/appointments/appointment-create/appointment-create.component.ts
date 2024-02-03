@@ -78,7 +78,7 @@ export class AppointmentCreateComponent {
 
             let userAppointmentRequests: CreateUserAppointmentRequest[] = [
               {appointmentId: appointment.id, userId: this.userIdsForm.value.patientId as number},
-              {appointmentId: appointment.id, userId: this.userIdsForm.value.patientId as number}
+              {appointmentId: appointment.id, userId: this.userIdsForm.value.doctorId as number}
             ]
             userAppointmentRequests.forEach(uar => {
               this.createUserAppointment(uar)
