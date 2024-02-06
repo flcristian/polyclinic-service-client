@@ -11,23 +11,25 @@ import {ConfirmPopup} from "primeng/confirmpopup";
 
 @Component({
   selector: 'app-appointment-view',
-  templateUrl: './appointment-view.component.html',
-  styleUrl: './appointment-view.component.sass'
+  templateUrl: './appointment-view.component.html'
 })
 export class AppointmentViewComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription()
   protected appointmentId: number = -1
   protected appointment: Appointment | null = null
   protected editAppointment: boolean = false;
+  protected seeUsers: boolean = false;
 
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
   appointmentForm = new FormGroup({
-    startDate: new FormControl(null, [
-      Validators.required
+    startDate: new FormControl(new Date(2024, 1), [
+      Validators.required,
+      this.dateValidator
     ]),
-    endDate: new FormControl(null, [
-      Validators.required
+    endDate: new FormControl(new Date(2024, 1), [
+      Validators.required,
+      this.dateValidator
     ])
   });
 
@@ -71,7 +73,7 @@ export class AppointmentViewComponent implements OnInit, OnDestroy {
   deleteAppointment(event: Event) {
     const confirmation: Confirmation = {
       target: event.target as EventTarget,
-      message: 'Are you sure you want to delete this item?',
+      message: 'Are you sure you want to cancel this appointment?',
       accept: () => {
         if(this.appointment){
           this.appointmentService.deleteAppointment(this.appointment.id).subscribe({
@@ -98,18 +100,55 @@ export class AppointmentViewComponent implements OnInit, OnDestroy {
     this.confirmPopup.reject()
   }
 
-  onSubmit() {
-    let request = this.appointmentForm.value as UpdateAppointmentRequest;
-    request.id = this.appointmentId;
+  updateAppointment(event: Event){
+    const confirmation: Confirmation = {
+      target: event.target as EventTarget,
+      message: 'Are you sure you want to update this appointment?',
+      accept: () => {
+        let request = this.appointmentForm.value as UpdateAppointmentRequest;
+        request.id = this.appointmentId;
 
-    this.appointmentService.updateAppointment(request).subscribe({
-      next: (appointment: Appointment) => {
-        this.appointmentState.addAppointment(appointment)
-        this.navigateToAppointments()
-      },
-      error: (error) => {
-        this.appointmentState.setError(error)
+        this.appointmentService.updateAppointment(request).subscribe({
+          next: (appointment: Appointment) => {
+            this.appointmentState.addAppointment(appointment)
+            this.navigateToAppointments()
+          },
+          error: (error) => {
+            this.appointmentState.setError(error)
+          }
+        })
       }
-    })
+    };
+
+    this.confirmationService.confirm(confirmation);
+  }
+
+  acceptUpdate(){
+    this.confirmPopup.accept()
+  }
+
+  rejectUpdate() {
+    this.confirmPopup.reject()
+  }
+
+  validDates() {
+    let dates: {startDate: Date, endDate: Date} = this.appointmentForm.value as {startDate: Date, endDate: Date};
+    return dates.startDate < dates.endDate
+  }
+
+  // Validators
+
+  private dateValidator(control: FormControl): { [s: string]: boolean } | null {
+    let checkDate = new Date(2024, 1)
+    let controlDate = new Date(control.value)
+    if (
+      checkDate.getFullYear() === controlDate.getFullYear() &&
+      checkDate.getMonth() === controlDate.getMonth() &&
+      checkDate.getDate() === controlDate.getDate() &&
+      checkDate.getHours() === controlDate.getHours() &&
+      checkDate.getMinutes() === controlDate.getMinutes() &&
+      checkDate.getSeconds() === controlDate.getSeconds()
+    ) return {'required': true};
+    return null;
   }
 }

@@ -6,8 +6,7 @@ import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-appointment',
-  templateUrl: './appointment.component.html',
-  styleUrl: './appointment.component.sass'
+  templateUrl: './appointment.component.html'
 })
 export class AppointmentComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription()

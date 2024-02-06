@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import {AppointmentStateService} from "./appointment-state.service";
 import {HttpClient} from "@angular/common/http";
 import {Appointment} from "../models/appointment.model";
-import {Observable} from "rxjs";
 import {CreateAppointmentRequest} from "../models/create-appointment-request.model";
 import {UpdateAppointmentRequest} from "../models/update-appointment-request.model";
+import {map, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +34,16 @@ export class AppointmentService {
 
   deleteAppointment(id: number): Observable<Appointment> {
     return this.http.delete<Appointment>(`${this.server}/delete/${id}`)
+  }
+
+  getFilteredAppointments(startDate: Date, endDate: Date): Observable<Appointment[]> {
+    this.appointmentState.setLoading(true)
+    return this.getAppointments().pipe(
+      map(appointments => {
+        return appointments.filter(appointment => {
+          return appointment.startDate >= startDate && appointment.endDate <= endDate
+        })
+      })
+    )
   }
 }

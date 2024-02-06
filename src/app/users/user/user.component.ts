@@ -7,8 +7,7 @@ import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrl: './user.component.sass'
+  templateUrl: './user.component.html'
 })
 export class UserComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription()

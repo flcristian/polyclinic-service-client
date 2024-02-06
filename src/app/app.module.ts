@@ -15,7 +15,7 @@ import {MessagesModule} from "primeng/messages";
 import {ToastModule} from "primeng/toast";
 import {ConfirmationService, MessageService} from "primeng/api";
 import {HttpErrorInterceptor} from "./interceptors/http-error.interceptor";
-import {AppointmentsPageComponent} from "./appointments/appointments-page/appointments-page.component";
+import {AppointmentListComponent} from "./appointments/appointment-list/appointment-list.component";
 import {AppointmentComponent} from "./appointments/appointment/appointment.component";
 import { UserComponent } from './users/user/user.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -23,15 +23,17 @@ import { AppointmentViewComponent } from './appointments/appointment-view/appoin
 import {ToggleButtonModule} from "primeng/togglebutton";
 import { AppointmentCreateComponent } from './appointments/appointment-create/appointment-create.component';
 import {ConfirmPopupModule} from "primeng/confirmpopup";
+import { LocaleDateStringPipe } from './pipes/custom-date/locale-date-string.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AppointmentsPageComponent,
+    AppointmentListComponent,
     AppointmentComponent,
     UserComponent,
     AppointmentViewComponent,
-    AppointmentCreateComponent
+    AppointmentCreateComponent,
+    LocaleDateStringPipe
   ],
   imports: [
     BrowserModule,

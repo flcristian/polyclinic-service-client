@@ -18,8 +18,7 @@ import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-appointment-create',
-  templateUrl: './appointment-create.component.html',
-  styleUrl: './appointment-create.component.sass'
+  templateUrl: './appointment-create.component.html'
 })
 export class AppointmentCreateComponent implements OnDestroy {
   private subscriptions = new Subscription()

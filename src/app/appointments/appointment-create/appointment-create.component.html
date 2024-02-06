@@ -22,9 +22,10 @@
     <p-message *ngIf="userIdsForm.get('patientId')?.touched&&userIdsForm.get('patientId')!.hasError('userNotFound')" severity="error" text="User does not exist."></p-message>
     <div style="display: inline" *ngIf="userIdsForm.get('patientId')?.touched && !userIdsForm.get('patientId')?.hasError('min') && !userIdsForm.get('patientId')?.hasError('required')">
       <p-message *ngIf="!patient; else displayPatient" severity="error" text="User does not exist."></p-message>
+      <p-message *ngIf="patient&&patient.type !== 1" severity="error" text="User is not a patient."></p-message>
     </div>
     <ng-template #displayPatient>
-      <app-user [userId]="patientId"></app-user>
+      <app-user *ngIf="patient?.type === 1" [userId]="patientId"></app-user>
     </ng-template>
   </div>
   <div class="form-control-container">
@@ -34,7 +35,7 @@
     <p-message *ngIf="userIdsForm.get('doctorId')?.touched&&userIdsForm.get('doctorId')!.hasError('min')" severity="error" text="Doctor id must be positive."></p-message>
     <div style="display: inline" *ngIf="userIdsForm.get('doctorId')?.touched && !userIdsForm.get('doctorId')?.hasError('min') && !userIdsForm.get('doctorId')?.hasError('required')">
       <p-message *ngIf="!doctor; else displayDoctor" severity="error" text="User does not exist."></p-message>
-      <p-message *ngIf="doctor&&doctor?.type !== 2" severity="error" text="User is not a doctor."></p-message>
+      <p-message *ngIf="doctor&&doctor.type !== 2" severity="error" text="User is not a doctor."></p-message>
     </div>
     <ng-template #displayDoctor>
       <app-user *ngIf="doctor?.type === 2" [userId]="doctorId"></app-user>
@@ -54,6 +55,6 @@
       </div>
     </ng-template>
   </p-confirmPopup>
-  <p-button [disabled]="appointmentForm.invalid || userIdsForm.invalid || !doctor || !patient || (doctor&&doctor?.type !== 2)" severity="success" [rounded]="true" (click)="createAppointment($event)">Create</p-button>
+  <p-button [disabled]="appointmentForm.invalid || userIdsForm.invalid || doctorId === patientId ||!doctor || !patient || (doctor&&doctor.type !== 2) || (patient&&patient.type !== 2)" severity="success" [rounded]="true" (click)="createAppointment($event)">Create</p-button>
   <p-button [rounded]="true" (click)="navigateToAppointments()">Cancel</p-button>
 </section>

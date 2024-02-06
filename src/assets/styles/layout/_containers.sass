@@ -1,0 +1,19 @@
+body
+  background-color: $color-background
+  @include flexy($dir: column)
+
+header
+  padding: 20px 10px
+  @include flexy($dir: column, $gap: 20px)
+
+.flex-column
+  @include flexy($dir: column)
+
+.flex-row
+  @include flexy($dir: row)
+
+.flex-row-align-center
+  @include flexy($dir: row, $align: center, $wrap: wrap)
+
+.button-container
+  @include flexy($dir: row, $gap: 10px)
