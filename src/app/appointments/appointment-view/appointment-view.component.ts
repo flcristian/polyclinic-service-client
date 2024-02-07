@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Appointment} from "../models/appointment.model";
 import {AppointmentService} from "../services/appointment.service";
@@ -15,10 +15,11 @@ import {ConfirmPopup} from "primeng/confirmpopup";
 })
 export class AppointmentViewComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription()
-  protected appointmentId: number = -1
+  @Input() appointmentId: number = -1
   protected appointment: Appointment | null = null
   protected editAppointment: boolean = false;
   protected seeUsers: boolean = false;
+  protected showBackButton: boolean = true;
 
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
@@ -42,9 +43,14 @@ export class AppointmentViewComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.route.params.subscribe((params: Params) => {
-      this.appointmentId = params['id'] ?? this.appointmentId
-    })
+    if(this.appointmentId === -1){
+      this.route.params.subscribe((params: Params) => {
+        this.appointmentId = params['id'] ?? this.appointmentId
+      })
+    }
+    else{
+      this.showBackButton = false;
+    }
 
     this.subscriptions.add(
       this.appointmentService.getAppointment(this.appointmentId).subscribe({
