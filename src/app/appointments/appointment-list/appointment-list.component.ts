@@ -1,13 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {AppointmentStateService} from "../services/appointment-state.service";
 import {AppointmentService} from "../services/appointment.service";
 
@@ -21,8 +12,6 @@ import {MessageService} from "primeng/api";
 })
 export class AppointmentListComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription()
-  protected isWideScreen: boolean = window.innerWidth > 920;
-  protected appointmentId: number = -1;
 
   // Filtering
   protected filters: boolean = false
@@ -88,13 +77,6 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Listeners
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    this.isWideScreen = event.target.innerWidth > 920;
-  }
-
   // Service calls
 
   private getAllAppointments(): Subscription{
@@ -127,9 +109,8 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
 
   // Navigation
 
-  selectAppointment(id: number) {
-    if(this.isWideScreen) this.appointmentId = id
-    else this.router.navigate([`/appointment`, id])
+  navigateToAppointment(id: number) {
+    this.router.navigate([`/appointment`, id])
   }
 
   navigateToAppointmentCreation() {

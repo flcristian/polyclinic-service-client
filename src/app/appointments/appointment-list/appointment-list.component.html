@@ -1,61 +1,56 @@
-<section [class.flex-row]="isWideScreen">
-  <ng-container *ngIf="appointmentState.state$ | async as state">
-    <body>
-    <header>
-      <h1>Appointments</h1>
-      <section class="button-container">
-        <p-toggleButton [(ngModel)]="filters" (click)="onClickFilters()" onIcon="pi pi-filter-fill" offIcon="pi pi-filter-slash" onLabel="Filters On" offLabel="Filters Off"></p-toggleButton>
-        <p-button (click)="clearFilters()" severity="warning">Clear Filters</p-button>
-      </section>
-      <section *ngIf="filters" class="form-card">
-        <div class="input-container">
-          <label for="startDate">From</label>
-          <input class="datetime" type="datetime-local" id="startDate" [(ngModel)]="startDate">
-        </div>
-        <div class="input-container">
-          <label for="endDate">To</label>
-          <input class="datetime" type="datetime-local" id="endDate" [(ngModel)]="endDate">
-        </div>
-        <p-button (click)="applyFilters()" severity="secondary">Apply</p-button>
-      </section>
-      <p-button (click)="stopPropagation($event); navigateToAppointmentCreation()">Create new appointment</p-button>
-    </header>
-    <main *ngIf="!state.loading && !state.error">
-      <div>
-        <p-table
-          [value]="state.appointments"
-          [scrollable]="true"
-          scrollHeight="70vh"
-          [paginator]="true"
-          [rows]="10"
-          [showCurrentPageReport]="true"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} appointments"
-          [rowsPerPageOptions]="[10, 20, 50, 100]"
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th>Id</th>
-              <th>Start Date</th>
-              <th>End Date</th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-appointment>
-            <tr class="cursor-pointer" (click)="selectAppointment(appointment.id)">
-              <td>{{ appointment.id }}</td>
-              <td>{{ appointment.startDate | localeDateString }}</td>
-              <td>{{ appointment.endDate | localeDateString }}</td>
-            </tr>
-          </ng-template>
-        </p-table>
-        <h3 *ngIf="state.appointments.length === 0" class="heading-centered">There are no appointments.</h3>
+<ng-container *ngIf="appointmentState.state$ | async as state">
+<body>
+  <header>
+    <h1>Appointments</h1>
+    <section class="button-container">
+      <p-toggleButton [(ngModel)]="filters" (click)="onClickFilters()" onIcon="pi pi-filter-fill" offIcon="pi pi-filter-slash" onLabel="Filters On" offLabel="Filters Off"></p-toggleButton>
+      <p-button (click)="clearFilters()" severity="warning">Clear Filters</p-button>
+    </section>
+    <section *ngIf="filters" class="form-card">
+      <div class="input-container">
+        <label for="startDate">From</label>
+        <input class="datetime" type="datetime-local" id="startDate" [(ngModel)]="startDate">
       </div>
-      <p-toast [life]="2000" [breakpoints]="{'640px': {width: '100%', right: '0', left: '0'}}"></p-toast>
-      <p-progressSpinner *ngIf="state.loading"></p-progressSpinner>
-    </main>
-    </body>
-  </ng-container>
-  <app-appointment-view *ngIf="isWideScreen && appointmentId != -1" class="width-30-vw" [appointmentId]="appointmentId"></app-appointment-view>
-  <section *ngIf="isWideScreen && appointmentId == -1">
-    Click an appointment to select it
-  </section>
-</section>
+      <div class="input-container">
+        <label for="endDate">To</label>
+        <input class="datetime" type="datetime-local" id="endDate" [(ngModel)]="endDate">
+      </div>
+      <p-button (click)="applyFilters()" severity="secondary">Apply</p-button>
+    </section>
+    <p-button (click)="stopPropagation($event); navigateToAppointmentCreation()">Create new appointment</p-button>
+  </header>
+  <main *ngIf="!state.loading && !state.error">
+    <div>
+      <p-table
+        [value]="state.appointments"
+        [scrollable]="true"
+        scrollHeight="70vh"
+        [paginator]="true"
+        [rows]="10"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} appointments"
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Id</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-appointment>
+          <tr class="cursor-pointer" (click)="navigateToAppointment(appointment.id)">
+            <td>{{ appointment.id }}</td>
+            <td>{{ appointment.startDate | localeDateString }}</td>
+            <td>{{ appointment.endDate | localeDateString }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <h3 *ngIf="state.appointments.length === 0" class="heading-centered">There are no appointments.</h3>
+    </div>
+    <p-toast [life]="2000" [breakpoints]="{'640px': {width: '100%', right: '0', left: '0'}}"></p-toast>
+    <p-progressSpinner *ngIf="state.loading"></p-progressSpinner>
+  </main>
+</body>
+</ng-container>
+
