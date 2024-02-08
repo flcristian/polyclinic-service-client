@@ -18,14 +18,14 @@
         <div class="flex-row-align-center gap-small">
           <div>
             <label for="startDate" class="bold">Start Date: </label>
-            <input class="form-control datetime" type="datetime-local" formControlName="startDate" id="startDate">
+            <input class="datetime" type="datetime-local" formControlName="startDate" id="startDate">
           </div>
           <p-message *ngIf="appointmentForm.get('startDate')?.touched&&appointmentForm.get('startDate')!.hasError('required')" severity="error" text="Start date is required."></p-message>
         </div>
         <div class="flex-row-align-center gap-small">
           <div>
             <label for="endDate" class="bold">End Date: </label>
-            <input class="form-control datetime" type="datetime-local" formControlName="endDate" id="endDate">
+            <input class="datetime" type="datetime-local" formControlName="endDate" id="endDate">
           </div>
           <p-message *ngIf="appointmentForm.get('endDate')?.touched&&appointmentForm.get('endDate')!.hasError('required')" severity="error" text="End date is required."></p-message>
         </div>

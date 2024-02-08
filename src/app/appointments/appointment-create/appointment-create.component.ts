@@ -29,11 +29,13 @@ export class AppointmentCreateComponent implements OnDestroy {
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
   appointmentForm = new FormGroup({
-    startDate: new FormControl(null, [
-      Validators.required
+    startDate: new FormControl(new Date(2024, 1), [
+      Validators.required,
+      this.dateValidator
     ]),
-    endDate: new FormControl(null, [
-      Validators.required
+    endDate: new FormControl(new Date(2024, 1), [
+      Validators.required,
+      this.dateValidator
     ])
   });
 
@@ -143,5 +145,26 @@ export class AppointmentCreateComponent implements OnDestroy {
 
   ngOnDestroy(){
     this.subscriptions.unsubscribe()
+  }
+
+  validDates() {
+    let dates: {startDate: Date, endDate: Date} = this.appointmentForm.value as {startDate: Date, endDate: Date};
+    return dates.startDate < dates.endDate
+  }
+
+  // Validators
+
+  private dateValidator(control: FormControl): { [s: string]: boolean } | null {
+    let checkDate = new Date(2024, 1)
+    let controlDate = new Date(control.value)
+    if (
+      checkDate.getFullYear() === controlDate.getFullYear() &&
+      checkDate.getMonth() === controlDate.getMonth() &&
+      checkDate.getDate() === controlDate.getDate() &&
+      checkDate.getHours() === controlDate.getHours() &&
+      checkDate.getMinutes() === controlDate.getMinutes() &&
+      checkDate.getSeconds() === controlDate.getSeconds()
+    ) return {'required': true};
+    return null;
   }
 }

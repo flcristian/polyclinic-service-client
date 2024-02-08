@@ -1,11 +1,8 @@
 .form-card
-  @include flexy($dir: column, $gap: 10px)
-  display: inline-flex
+  @include flexy($dir: column, $gap: 10px, $wrap: wrap)
+  display: inline-flex !important
   background-color: $color-background-secondary
   border: 1px solid $color-secondary
   border-left: 2px solid $color-secondary
   border-radius: 10px
   padding: 20px
-
-.form-card-child
-  display: inline-block

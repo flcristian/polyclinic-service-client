@@ -1,60 +1,87 @@
-<form style="display: flex; flex-direction: column; gap: 10px" [formGroup]="appointmentForm">
-  <h3>Appointment Details</h3>
-  <div class="form-control-container">
-    <label for="startDate">Start Date</label>
-    <input class="form-control w-25" type="datetime-local" formControlName="startDate" id="startDate">
-    <p-message *ngIf="appointmentForm.get('startDate')?.touched&&appointmentForm.get('startDate')!.hasError('required')" severity="error" text="Start date is required."></p-message>
-  </div>
-  <div class="form-control-container">
-    <label for="endDate">End Date</label>
-    <input class="form-control w-25" type="datetime-local" formControlName="endDate" id="endDate">
-    <p-message *ngIf="appointmentForm.get('endDate')?.touched&&appointmentForm.get('endDate')!.hasError('required')" severity="error" text="End date is required."></p-message>
-  </div>
-</form>
-
-<form style="display: flex; flex-direction: column; gap: 10px" [formGroup]="userIdsForm">
-  <h3>User Details</h3>
-  <div class="form-control-container">
-    <label for="patientId">Patient Id</label>
-    <input class="form-control w-25" type="number" formControlName="patientId" id="patientId" (change)="onPatientIdUpdate()">
-    <p-message *ngIf="userIdsForm.get('patientId')?.touched&&userIdsForm.get('patientId')!.hasError('required')" severity="error" text="Patient id is required."></p-message>
-    <p-message *ngIf="userIdsForm.get('patientId')?.touched&&userIdsForm.get('patientId')!.hasError('min')" severity="error" text="Patient id must be positive."></p-message>
-    <p-message *ngIf="userIdsForm.get('patientId')?.touched&&userIdsForm.get('patientId')!.hasError('userNotFound')" severity="error" text="User does not exist."></p-message>
-    <div style="display: inline" *ngIf="userIdsForm.get('patientId')?.touched && !userIdsForm.get('patientId')?.hasError('min') && !userIdsForm.get('patientId')?.hasError('required')">
-      <p-message *ngIf="!patient; else displayPatient" severity="error" text="User does not exist."></p-message>
-      <p-message *ngIf="patient&&patient.type !== 1" severity="error" text="User is not a patient."></p-message>
-    </div>
-    <ng-template #displayPatient>
-      <app-user *ngIf="patient?.type === 1" [userId]="patientId"></app-user>
-    </ng-template>
-  </div>
-  <div class="form-control-container">
-    <label for="doctorId">Doctor Id</label>
-    <input class="form-control w-25" type="number" formControlName="doctorId" id="doctorId" (change)="onDoctorIdUpdate()">
-    <p-message *ngIf="userIdsForm.get('doctorId')?.touched&&userIdsForm.get('doctorId')!.hasError('required')" severity="error" text="Doctor id is required."></p-message>
-    <p-message *ngIf="userIdsForm.get('doctorId')?.touched&&userIdsForm.get('doctorId')!.hasError('min')" severity="error" text="Doctor id must be positive."></p-message>
-    <div style="display: inline" *ngIf="userIdsForm.get('doctorId')?.touched && !userIdsForm.get('doctorId')?.hasError('min') && !userIdsForm.get('doctorId')?.hasError('required')">
-      <p-message *ngIf="!doctor; else displayDoctor" severity="error" text="User does not exist."></p-message>
-      <p-message *ngIf="doctor&&doctor.type !== 2" severity="error" text="User is not a doctor."></p-message>
-    </div>
-    <ng-template #displayDoctor>
-      <app-user *ngIf="doctor?.type === 2" [userId]="doctorId"></app-user>
-    </ng-template>
-  </div>
-</form>
-
-<section style="display: flex; gap: 10px">
-  <p-confirmPopup>
-    <ng-template pTemplate="headless" let-message>
-      <div class="bg-gray-900 text-white border-round p-3">
-        <span>{{ message.message }}</span>
-        <div class="flex align-items-center gap-2 mt-3">
-          <button (click)="acceptCreate()" pButton label="Create" class="p-button-sm p-button-outlined"></button>
-          <button (click)="rejectCreate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+<body class="padding-medium flex-column gap-medium">
+  <section class="flex-column gap-small">
+    <h1>Appointment Details</h1>
+    <form class="form-card" [formGroup]="appointmentForm">
+      <div class="flex-row-align-center gap-small">
+        <div>
+          <label for="startDate" class="bold">Start Date: </label>
+          <input class="datetime" type="datetime-local" formControlName="startDate" id="startDate">
         </div>
+        <p-message *ngIf="appointmentForm.get('startDate')?.touched&&appointmentForm.get('startDate')!.hasError('required')" severity="error" text="Start date is required."></p-message>
       </div>
-    </ng-template>
-  </p-confirmPopup>
-  <p-button [disabled]="appointmentForm.invalid || userIdsForm.invalid || doctorId === patientId ||!doctor || !patient || (doctor&&doctor.type !== 2) || (patient&&patient.type !== 2)" severity="success" [rounded]="true" (click)="createAppointment($event)">Create</p-button>
-  <p-button [rounded]="true" (click)="navigateToAppointments()">Cancel</p-button>
-</section>
+      <div class="flex-row-align-center gap-small">
+        <div>
+          <label for="endDate" class="bold">End Date: </label>
+          <input class="datetime" type="datetime-local" formControlName="endDate" id="endDate">
+        </div>
+        <p-message *ngIf="appointmentForm.get('endDate')?.touched&&appointmentForm.get('endDate')!.hasError('required')" severity="error" text="End date is required."></p-message>
+      </div>
+      <p-message *ngIf="appointmentForm.get('endDate')?.touched&&appointmentForm.get('startDate')?.touched&&!validDates()" severity="error" text="Start date must be before the end date."></p-message>
+    </form>
+  </section>
+  <section class="flex-column gap-small">
+    <h1>User Details</h1>
+    <form class="form-card" [formGroup]="userIdsForm">
+      <section class="flex-column gap-small">
+        <div class="flex-row-align-center gap-small">
+          <label class="bold" for="patientId">Patient Id: </label>
+          <input class="text-input" type="number" formControlName="patientId" id="patientId" (change)="onPatientIdUpdate()">
+          <p-message *ngIf="userIdsForm.get('patientId')?.touched&&userIdsForm.get('patientId')!.hasError('required')" severity="error" text="Patient id is required."></p-message>
+          <p-message *ngIf="userIdsForm.get('patientId')?.touched&&userIdsForm.get('patientId')!.hasError('min')" severity="error" text="Patient id must be positive."></p-message>
+          <p-message *ngIf="userIdsForm.get('patientId')?.touched&&userIdsForm.get('patientId')!.hasError('userNotFound')" severity="error" text="User does not exist."></p-message>
+          <div style="display: inline" *ngIf="userIdsForm.get('patientId')?.touched && !userIdsForm.get('patientId')?.hasError('min') && !userIdsForm.get('patientId')?.hasError('required')">
+            <p-message *ngIf="!patient" severity="error" text="User does not exist."></p-message>
+            <p-message *ngIf="patient&&patient.type !== 1" severity="error" text="User is not a patient."></p-message>
+          </div>
+        </div>
+        <div>
+          <app-user *ngIf="patient&&patient.type === 1; else patientPlaceholder" [userId]="patientId"></app-user>
+          <ng-template #patientPlaceholder>
+            <div class="item-card-placeholder">
+              <span class="bold">Your patient will be displayed here once entered correctly.</span>
+            </div>
+          </ng-template>
+        </div>
+      </section>
+
+      <section class="flex-column gap-small">
+        <div class="flex-row-align-center gap-small">
+          <label class="bold" for="doctorId">Doctor Id: </label>
+          <input class="text-input" type="number" formControlName="doctorId" id="doctorId" (change)="onDoctorIdUpdate()">
+          <p-message *ngIf="userIdsForm.get('doctorId')?.touched&&userIdsForm.get('doctorId')!.hasError('required')" severity="error" text="Doctor id is required."></p-message>
+          <p-message *ngIf="userIdsForm.get('doctorId')?.touched&&userIdsForm.get('doctorId')!.hasError('min')" severity="error" text="Doctor id must be positive."></p-message>
+          <div *ngIf="userIdsForm.get('doctorId')?.touched && !userIdsForm.get('doctorId')?.hasError('min') && !userIdsForm.get('doctorId')?.hasError('required')">
+            <p-message *ngIf="!doctor" severity="error" text="User does not exist."></p-message>
+            <p-message *ngIf="doctor&&doctor.type !== 2" severity="error" text="User is not a doctor."></p-message>
+          </div>
+        </div>
+        <div>
+          <app-user *ngIf="doctor&&doctor.type === 2; else doctorPlaceholder" [userId]="doctorId"></app-user>
+          <ng-template #doctorPlaceholder>
+            <div class="item-card-placeholder">
+              <span class="bold">Your doctor will be displayed here once entered correctly.</span>
+            </div>
+          </ng-template>
+        </div>
+      </section>
+    </form>
+  </section>
+
+  <section class="flex-row gap-small">
+    <p-button [disabled]="appointmentForm.invalid || userIdsForm.invalid || !doctor || !patient || (doctor&&doctor.type !== 2) || (patient&&patient.type !== 1) || !validDates()" severity="success" [rounded]="true" (click)="createAppointment($event)">Create</p-button>
+    <p-button [rounded]="true" (click)="navigateToAppointments()">Cancel</p-button>
+    <p-confirmPopup>
+      <ng-template pTemplate="headless" let-message>
+        <div class="bg-gray-900 text-white border-round p-3">
+          <span>{{ message.message }}</span>
+          <div class="flex align-items-center gap-2 mt-3">
+            <button (click)="acceptCreate()" pButton label="Create" class="p-button-sm p-button-outlined"></button>
+            <button (click)="rejectCreate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+          </div>
+        </div>
+      </ng-template>
+    </p-confirmPopup>
+  </section>
+</body>
+<p-toast></p-toast>
+
