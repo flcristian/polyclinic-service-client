@@ -19,11 +19,14 @@ import {AppointmentListComponent} from "./appointments/appointment-list/appointm
 import {AppointmentComponent} from "./appointments/appointment/appointment.component";
 import { UserComponent } from './users/user/user.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import { AppointmentViewComponent } from './appointments/appointment-view/appointment-view.component';
+import { AppointmentSelectRouteComponent } from './appointments/appointment-select-route/appointment-select-route.component';
 import {ToggleButtonModule} from "primeng/togglebutton";
 import { AppointmentCreateComponent } from './appointments/appointment-create/appointment-create.component';
 import {ConfirmPopupModule} from "primeng/confirmpopup";
 import { LocaleDateStringPipe } from './pipes/custom-date/locale-date-string.pipe';
+import {
+  AppointmentSelectSubjectComponent
+} from "./appointments/appointment-select-subject/appointment-select-subject.component";
 
 @NgModule({
   declarations: [
@@ -31,7 +34,8 @@ import { LocaleDateStringPipe } from './pipes/custom-date/locale-date-string.pip
     AppointmentListComponent,
     AppointmentComponent,
     UserComponent,
-    AppointmentViewComponent,
+    AppointmentSelectRouteComponent,
+    AppointmentSelectSubjectComponent,
     AppointmentCreateComponent,
     LocaleDateStringPipe
   ],

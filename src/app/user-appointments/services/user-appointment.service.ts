@@ -12,15 +12,13 @@ import {UpdateUserAppointmentRequest} from "../models/update-user-appointment-re
 export class UserAppointmentService {
   private server: string = "http://localhost:5275/api/v1/UserAppointments";
 
-  constructor(private http: HttpClient, private userAppointmentState: UserAppointmentStateService) { }
+  constructor(private http: HttpClient) { }
 
   getUserAppointments(): Observable<UserAppointment[]> {
-    this.userAppointmentState.setLoading(true)
     return this.http.get<UserAppointment[]>(this.server + "/all")
   }
 
   getUserAppointment(userAppointmentId: number): Observable<UserAppointment> {
-    this.userAppointmentState.setLoading(true)
     return this.http.get<UserAppointment>(this.server + `/userAppointment/${userAppointmentId}`)
   }
 

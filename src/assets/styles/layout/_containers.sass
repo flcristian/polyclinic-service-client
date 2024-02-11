@@ -1,4 +1,4 @@
-body
+.container
   background-color: $color-background
   @include flexy($dir: column)
 
@@ -17,3 +17,7 @@ header
 
 .button-container
   @include flexy($dir: row, $gap: 10px)
+
+.grid-half
+  display: grid
+  grid-template-columns: 2fr 1fr

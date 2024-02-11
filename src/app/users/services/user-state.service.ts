@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from "rxjs";
 import {User} from "../models/user.model";
 import {UserState} from "./user-state";
-
+import {UserService} from "./user.service";
+import {CreateUserRequest} from "../models/create-user-request.model";
+import {UpdateUserRequest} from "../models/update-user-request.model";
 
 @Injectable({
   providedIn: 'root'
@@ -11,34 +13,48 @@ export class UserStateService {
   private stateSubject = new BehaviorSubject<UserState>({
     users: [],
     loading: false,
-    error: null
+    error: null,
+    selectedUser: null
   });
   state$: Observable<UserState> = this.stateSubject.asObservable();
 
-  constructor() { }
+  constructor(private service: UserService) { }
 
-  setUsers(users: User[]) {
-    this.setState({users})
+  // Service calls
+
+  createUser(request: CreateUserRequest){
+    this.setLoading(true)
+    return this.service.createUser(request)
   }
+
+  updateUser(request: UpdateUserRequest){
+    this.setLoading(true)
+    return this.service.updateUser(request)
+  }
+
+  deleteUser(id: number){
+    this.setLoading(true)
+    return this.service.deleteUser(id)
+  }
+
+  getUser(id: number){
+    this.setLoading(true)
+    return this.service.getUser(id)
+  }
+
+  getUsers(){
+    this.setLoading(true)
+    return this.service.getUsers()
+  }
+
+  // State updaters
 
   addUser(newUser: User) {
     let users: User[] = [...this.stateSubject.value.users, newUser]
     this.setState({users})
   }
 
-  updateUser(user: User){
-    let oldUsers: User[] = this.stateSubject.value.users;
-    let users: User[] = []
-
-    oldUsers.forEach(p => {
-      if(p.id != user.id) users.push(p)
-      else users.push(user)
-    })
-
-    this.setState({users})
-  }
-
-  deleteUser(user: User){
+  removeUser(user: User){
     let oldUsers: User[] = this.stateSubject.value.users
     let users: User[] = []
 
@@ -49,12 +65,33 @@ export class UserStateService {
     this.setState({users})
   }
 
+  editUser(user: User){
+    let oldUsers: User[] = this.stateSubject.value.users
+    let users: User[] = []
+
+    oldUsers.forEach(p => {
+      users.push(p.id === user.id ? user : p);
+    })
+
+    this.setState({users})
+  }
+
+  // State setters
+
   setLoading(loading: boolean) {
     this.setState({loading})
   }
 
   setError(error: string | null) {
     this.setState({error});
+  }
+
+  setSelectedUser(selectedUser: User){
+    this.setState({selectedUser})
+  }
+
+  setUsers(users: User[]) {
+    this.setState({users})
   }
 
   setState(partialState: Partial<UserState>){

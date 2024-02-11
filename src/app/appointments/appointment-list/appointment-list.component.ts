@@ -1,8 +1,17 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  OnDestroy,
+  OnInit, Output,
+  ViewChild
+} from '@angular/core';
 import {AppointmentStateService} from "../services/appointment-state.service";
 import {AppointmentService} from "../services/appointment.service";
 
-import {mergeScan, Subscription, throwError} from "rxjs";
+import {mergeScan, Subject, Subscription, throwError} from "rxjs";
 import {Router} from "@angular/router";
 import {MessageService} from "primeng/api";
 
@@ -12,6 +21,8 @@ import {MessageService} from "primeng/api";
 })
 export class AppointmentListComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription()
+
+  protected wideScreen = window.innerWidth > 800
 
   // Filtering
   protected filters: boolean = false
@@ -77,10 +88,8 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Service calls
-
   private getAllAppointments(): Subscription{
-    return this.appointmentService.getAppointments().subscribe({
+    return this.appointmentState.getAppointments().subscribe({
       next:(appointments)=>{
         this.appointmentState.setAppointments(appointments)
       },
@@ -110,14 +119,21 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   // Navigation
 
   navigateToAppointment(id: number) {
-    this.router.navigate([`/appointment`, id])
+    this.appointmentState.getAppointment(id).subscribe({
+      next: (appointment) => {
+        this.appointmentState.setSelectedAppointment(appointment)
+      },
+      error: (error) => {
+        this.appointmentState.setError(error)
+      },
+      complete: () => {
+        this.appointmentState.setLoading(false)
+      }
+    })
+    //this.router.navigate([`/appointment`, id])
   }
 
   navigateToAppointmentCreation() {
     this.router.navigate([`/create-appointment`])
-  }
-
-  stopPropagation(event: Event): void {
-    event.stopPropagation();
   }
 }

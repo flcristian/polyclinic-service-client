@@ -12,15 +12,13 @@ import {map, Observable} from "rxjs";
 export class AppointmentService {
   private server: string = "http://localhost:5275/api/v1/Appointments";
 
-  constructor(private http: HttpClient, private appointmentState: AppointmentStateService) { }
+  constructor(private http: HttpClient) { }
 
   getAppointments(): Observable<Appointment[]> {
-    this.appointmentState.setLoading(true)
     return this.http.get<Appointment[]>(this.server + "/all")
   }
 
   getAppointment(appointmentId: number): Observable<Appointment> {
-    this.appointmentState.setLoading(true)
     return this.http.get<Appointment>(this.server + `/appointment/${appointmentId}`)
   }
 
@@ -37,7 +35,6 @@ export class AppointmentService {
   }
 
   getFilteredAppointments(startDate: Date, endDate: Date): Observable<Appointment[]> {
-    this.appointmentState.setLoading(true)
     return this.getAppointments().pipe(
       map(appointments => {
         return appointments.filter(appointment => {

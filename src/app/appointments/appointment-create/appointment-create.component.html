@@ -1,4 +1,4 @@
-<body class="padding-medium flex-column gap-medium">
+<div class="container padding-medium flex-column gap-medium">
   <section class="flex-column gap-small">
     <h1>Appointment Details</h1>
     <form class="form-card" [formGroup]="appointmentForm">
@@ -16,7 +16,7 @@
         </div>
         <p-message *ngIf="appointmentForm.get('endDate')?.touched&&appointmentForm.get('endDate')!.hasError('required')" severity="error" text="End date is required."></p-message>
       </div>
-      <p-message *ngIf="appointmentForm.get('endDate')?.touched&&appointmentForm.get('startDate')?.touched&&!validDates()" severity="error" text="Start date must be before the end date."></p-message>
+      <p-message *ngIf="!datesEntered()&&appointmentForm.get('endDate')?.touched&&appointmentForm.get('startDate')?.touched&&!validDates()" severity="error" text="Start date must be before the end date."></p-message>
     </form>
   </section>
   <section class="flex-column gap-small">
@@ -82,6 +82,6 @@
       </ng-template>
     </p-confirmPopup>
   </section>
-</body>
+</div>
 <p-toast></p-toast>
 

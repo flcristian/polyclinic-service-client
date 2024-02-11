@@ -51,10 +51,8 @@ export class AppointmentCreateComponent implements OnDestroy {
   });
 
   constructor(
-    public appointmentService: AppointmentService,
     public appointmentState: AppointmentStateService,
-    public userService: UserService,
-    public userAppointmentService: UserAppointmentService,
+    public userState: UserStateService,
     public userAppointmentState: UserAppointmentStateService,
     private router: Router,
     private confirmationService: ConfirmationService
@@ -66,12 +64,15 @@ export class AppointmentCreateComponent implements OnDestroy {
   }
 
   createUserAppointment(request: CreateUserAppointmentRequest){
-    this.userAppointmentService.createUserAppointment(request).subscribe({
+    this.userAppointmentState.createUserAppointment(request).subscribe({
       next: (userAppointment: UserAppointment) => {
         this.userAppointmentState.addUserAppointment(userAppointment)
       },
       error: (error) => {
         this.userAppointmentState.setError(error)
+      },
+      complete: () => {
+        this.appointmentState.setLoading(false)
       }
     })
   }
@@ -83,7 +84,7 @@ export class AppointmentCreateComponent implements OnDestroy {
       target: event.target as EventTarget,
       message: 'Are you sure you want to create this appointment?',
       accept: () => {
-        this.appointmentService.createAppointment(request).subscribe({
+        this.appointmentState.createAppointment(request).subscribe({
           next: (appointment: Appointment) => {
             this.appointmentState.addAppointment(appointment);
 
@@ -99,6 +100,9 @@ export class AppointmentCreateComponent implements OnDestroy {
           },
           error: (error) => {
             this.appointmentState.setError(error)
+          },
+          complete: () => {
+            this.appointmentState.setLoading(false)
           }
         })
       }
@@ -120,9 +124,15 @@ export class AppointmentCreateComponent implements OnDestroy {
     this.patient = null
     if(this.patientId > 0){
       this.subscriptions.add(
-        this.userService.getUser(this.patientId).subscribe({
+        this.userState.getUser(this.patientId).subscribe({
           next: (user: User) => {
             this.patient = user
+          },
+          error: (error) => {
+            this.userState.setError(error)
+          },
+          complete: () => {
+            this.userState.setLoading(false)
           }
         })
       )
@@ -134,9 +144,15 @@ export class AppointmentCreateComponent implements OnDestroy {
     this.doctor = null
     if(this.doctorId > 0){
       this.subscriptions.add(
-        this.userService.getUser(this.doctorId).subscribe({
+        this.userState.getUser(this.doctorId).subscribe({
           next: (user: User) => {
             this.doctor = user
+          },
+          error: (error) => {
+            this.userState.setError(error)
+          },
+          complete: () => {
+            this.userState.setLoading(false)
           }
         })
       )
@@ -150,6 +166,10 @@ export class AppointmentCreateComponent implements OnDestroy {
   validDates() {
     let dates: {startDate: Date, endDate: Date} = this.appointmentForm.value as {startDate: Date, endDate: Date};
     return dates.startDate < dates.endDate
+  }
+
+  datesEntered(){
+    return this.appointmentForm.get('startDate')?.hasError('required') || this.appointmentForm.get('endDate')?.hasError('required')
   }
 
   // Validators

@@ -1,0 +1,69 @@
+<div>
+  <div *ngIf="appointment && appointment.id > 0; else noAppointment" class="container padding-medium flex-column gap-medium">
+    <p-button (click)="navigateToAppointments()">Back</p-button>
+    <h1>Appointment Details</h1>
+    <app-appointment [appointmentId]="appointment.id"></app-appointment>
+
+    <section *ngIf="appointment && appointment.userAppointments" class="flex-column gap-small">
+      <p-toggleButton [(ngModel)]="seeUsers" onLabel="Hide Users" offLabel="Show Users"></p-toggleButton>
+      <section *ngIf="seeUsers" class="flex-column gap-small">
+        <app-user [userId]="appointment.userAppointments[0].userId"></app-user>
+        <app-user [userId]="appointment.userAppointments[1].userId"></app-user>
+      </section>
+    </section>
+
+    <section class="flex-column gap-small">
+      <p-toggleButton [(ngModel)]="editAppointment" onLabel="Cancel" offLabel="Edit Appointment"></p-toggleButton>
+      <section *ngIf="editAppointment">
+        <form [formGroup]="appointmentForm" class="form-card">
+          <div class="flex-row-align-center gap-small">
+            <div>
+              <label for="startDate" class="bold">Start Date: </label>
+              <input class="datetime" type="datetime-local" formControlName="startDate" id="startDate">
+            </div>
+            <p-message *ngIf="appointmentForm.get('startDate')?.touched&&appointmentForm.get('startDate')!.hasError('required')" severity="error" text="Start date is required."></p-message>
+          </div>
+          <div class="flex-row-align-center gap-small">
+            <div>
+              <label for="endDate" class="bold">End Date: </label>
+              <input class="datetime" type="datetime-local" formControlName="endDate" id="endDate">
+            </div>
+            <p-message *ngIf="appointmentForm.get('endDate')?.touched&&appointmentForm.get('endDate')!.hasError('required')" severity="error" text="End date is required."></p-message>
+          </div>
+          <p-message *ngIf="appointmentForm.get('endDate')?.touched&&appointmentForm.get('startDate')?.touched&&!validDates()" severity="error" text="Start date must be before the end date."></p-message>
+          <section>
+            <p-confirmPopup>
+              <ng-template pTemplate="headless" let-message>
+                <section class="">
+                  <span>{{ message.message }}</span>
+                  <section class="">
+                    <button (click)="acceptUpdate()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
+                    <button (click)="rejectUpdate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+                  </section>
+                </section>
+              </ng-template>
+            </p-confirmPopup>
+            <p-button (click)="updateAppointment($event)" [disabled]="appointmentForm.invalid || !validDates()">Update</p-button>
+          </section>
+        </form>
+      </section>
+      <p-confirmPopup>
+        <ng-template pTemplate="headless" let-message>
+          <section class="">
+            <span>{{ message.message }}</span>
+            <section class="">
+              <button (click)="acceptDelete()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
+              <button (click)="rejectDelete()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+            </section>
+          </section>
+        </ng-template>
+      </p-confirmPopup>
+      <p-button (click)="deleteAppointment($event)" severity="warning" [rounded]="true">Cancel Appointment</p-button>
+    </section>
+
+    <p-toast></p-toast>
+  </div>
+  <ng-template #noAppointment>
+    <p>no appointment selected</p>
+  </ng-template>
+</div>
