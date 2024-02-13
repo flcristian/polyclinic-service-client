@@ -1,4 +1,6 @@
 export interface CreateAppointmentRequest{
-  startDate: Date | null,
-  endDate: Date | null
+  startDate: Date,
+  endDate: Date,
+  patientId: number,
+  doctorId: number
 }

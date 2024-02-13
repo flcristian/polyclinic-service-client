@@ -33,14 +33,4 @@ export class AppointmentService {
   deleteAppointment(id: number): Observable<Appointment> {
     return this.http.delete<Appointment>(`${this.server}/delete/${id}`)
   }
-
-  getFilteredAppointments(startDate: Date, endDate: Date): Observable<Appointment[]> {
-    return this.getAppointments().pipe(
-      map(appointments => {
-        return appointments.filter(appointment => {
-          return appointment.startDate >= startDate && appointment.endDate <= endDate
-        })
-      })
-    )
-  }
 }

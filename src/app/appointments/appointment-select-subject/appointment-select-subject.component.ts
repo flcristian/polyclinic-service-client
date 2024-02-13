@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from "@angular/router";
 import {Appointment} from "../models/appointment.model";
 import {AppointmentStateService} from "../services/appointment-state.service";
@@ -16,6 +16,7 @@ export class AppointmentSelectSubjectComponent implements OnInit, OnDestroy {
   protected appointment: Appointment | null = null
   protected editAppointment: boolean = false;
   protected seeUsers: boolean = false;
+  private error: String | null = null;
 
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
@@ -36,18 +37,10 @@ export class AppointmentSelectSubjectComponent implements OnInit, OnDestroy {
     private router: Router
   ) { }
 
-  ngOnInit() {
+  ngOnInit(){
     this.subscriptions.add(
-      this.appointmentState.state$.subscribe({
-        next: (state) => {
-          this.appointment = state.selectedAppointment
-        },
-        error: (error) => {
-          this.appointmentState.setError(error)
-        },
-        complete: () => {
-          this.appointmentState.setLoading(false)
-        }
+      this.appointmentState.state$.subscribe(data => {
+        this.error = data.error
       })
     )
   }
@@ -66,22 +59,9 @@ export class AppointmentSelectSubjectComponent implements OnInit, OnDestroy {
       target: event.target as EventTarget,
       message: 'Are you sure you want to cancel this appointment?',
       accept: () => {
-        if(this.appointment){
-          this.subscriptions.add(
-            this.appointmentState.deleteAppointment(this.appointment.id).subscribe({
-              next: (appointment: Appointment) => {
-                this.appointmentState.removeAppointment(appointment);
-                this.navigateToAppointments()
-              },
-              error: (error) => {
-                this.appointmentState.setError(error)
-              },
-              complete:() => {
-                this.appointmentState.setLoading(false)
-              }
-            })
-          )
-        }
+        this.appointmentState.deleteSelectedAppointment()
+
+        //if(!this.error) this.navigateToAppointments()
       }
     };
 
@@ -102,22 +82,9 @@ export class AppointmentSelectSubjectComponent implements OnInit, OnDestroy {
       message: 'Are you sure you want to update this appointment?',
       accept: () => {
         let request = this.appointmentForm.value as UpdateAppointmentRequest;
-        request.id = (this.appointment as Appointment).id;
+        this.appointmentState.updateSelectedAppointment(request);
 
-        this.subscriptions.add(
-          this.appointmentState.updateAppointment(request).subscribe({
-            next: (appointment) => {
-              this.appointmentState.editAppointment(appointment)
-              this.navigateToAppointments()
-            },
-            error: (error) => {
-              this.appointmentState.setError(error)
-            },
-            complete:() => {
-              this.appointmentState.setLoading(false)
-            }
-          })
-        )
+        //if(!this.error) this.navigateToAppointments()
       }
     };
 

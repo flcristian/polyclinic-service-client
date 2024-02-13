@@ -8,33 +8,8 @@ import {Subscription} from "rxjs";
   selector: 'app-appointment',
   templateUrl: './appointment.component.html'
 })
-export class AppointmentComponent implements OnInit, OnDestroy {
-  private subscriptions = new Subscription()
-  @Input() appointmentId: number = -1
-  protected appointment: Appointment | null = null
+export class AppointmentComponent {
+  @Input() appointment: Appointment | null = null
 
-  constructor(
-    public appointmentService: AppointmentService,
-    public appointmentState: AppointmentStateService,
-  ) { }
-
-  ngOnInit() {
-    this.subscriptions.add(
-      this.appointmentService.getAppointment(this.appointmentId).subscribe({
-        next: (appointment) => {
-          this.appointment = appointment
-        },
-        error: (error) => {
-          this.appointmentState.setError(error)
-        },
-        complete: () => {
-          this.appointmentState.setLoading(false)
-        }
-      })
-    )
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe()
-  }
+  constructor() { }
 }

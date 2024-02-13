@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, map, Observable} from "rxjs";
 import {Appointment} from "../models/appointment.model";
 import {AppointmentState} from "./appointment-state";
 import {AppointmentService} from "./appointment.service";
@@ -25,17 +25,86 @@ export class AppointmentStateService {
 
   createAppointment(request: CreateAppointmentRequest){
     this.setLoading(true)
-    return this.service.createAppointment(request)
+    this.service.createAppointment(request).subscribe({
+      next: (newAppointment) => {
+        this.addAppointment(newAppointment)
+      },
+      error: (error) => {
+        this.setError(error)
+      },
+      complete: () => {
+        this.setLoading(false)
+      }
+    })
   }
 
   updateAppointment(request: UpdateAppointmentRequest){
     this.setLoading(true)
-    return this.service.updateAppointment(request)
+    this.service.updateAppointment(request).subscribe({
+      next: (newAppointment) => {
+        this.editAppointment(newAppointment)
+      },
+      error: (error) => {
+        this.setError(error)
+      },
+      complete: () => {
+        this.setLoading(false)
+      }
+    })
   }
 
   deleteAppointment(id: number){
     this.setLoading(true)
-    return this.service.deleteAppointment(id)
+    this.service.deleteAppointment(id).subscribe({
+      next: () => {
+        this.removeAppointment(id)
+      },
+      error: (error) => {
+        this.setError(error)
+      },
+      complete: () => {
+        this.setLoading(false)
+      }
+    })
+  }
+
+  deleteSelectedAppointment(){
+    this.setLoading(true)
+    let appointment = this.stateSubject.value.selectedAppointment
+    if(appointment){
+      this.service.deleteAppointment(appointment.id).subscribe({
+        next: () => {
+          this.removeAppointment(appointment!.id)
+          this.setSelectedAppointment(null)
+        },
+        error: (error) => {
+          this.setError(error)
+        },
+        complete: () => {
+          this.setLoading(false)
+        }
+      })
+    }
+  }
+
+  updateSelectedAppointment(request: UpdateAppointmentRequest){
+    this.setLoading(true)
+    let appointment = this.stateSubject.value.selectedAppointment
+    if(appointment) {
+      request.id = appointment.id
+      this.service.updateAppointment(request).subscribe({
+        next: (newAppointment) => {
+          this.editAppointment(newAppointment)
+          this.setSelectedAppointment(newAppointment)
+        },
+        error: (error) => {
+          this.setError(error)
+        },
+        complete: () => {
+          this.setLoading(false)
+        }
+      })
+    }
   }
 
   getAppointment(id: number){
@@ -48,6 +117,16 @@ export class AppointmentStateService {
     return this.service.getAppointments()
   }
 
+  getFilteredAppointments(startDate: Date, endDate: Date): Observable<Appointment[]> {
+    return this.getAppointments().pipe(
+      map(appointments => {
+        return appointments.filter(appointment => {
+          return appointment.startDate >= startDate && appointment.endDate <= endDate
+        })
+      })
+    )
+  }
+
   // State updaters
 
   addAppointment(newAppointment: Appointment) {
@@ -55,12 +134,12 @@ export class AppointmentStateService {
     this.setState({appointments})
   }
 
-  removeAppointment(appointment: Appointment){
+  removeAppointment(id: number){
     let oldAppointments: Appointment[] = this.stateSubject.value.appointments
     let appointments: Appointment[] = []
 
     oldAppointments.forEach(p => {
-      if(p.id != appointment.id) appointments.push(p)
+      if(p.id != id) appointments.push(p)
     })
 
     this.setState({appointments})
@@ -87,7 +166,13 @@ export class AppointmentStateService {
     this.setState({error});
   }
 
-  setSelectedAppointment(selectedAppointment: Appointment){
+  setSelectedAppointmentById (id: number){
+    let selectedAppointment= this.stateSubject.value.appointments.filter(val=> val.id == id)[0];
+
+    this.setState({selectedAppointment})
+  }
+
+  setSelectedAppointment(selectedAppointment: Appointment | null) {
     this.setState({selectedAppointment})
   }
 

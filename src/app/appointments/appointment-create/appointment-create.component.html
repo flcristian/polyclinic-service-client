@@ -1,4 +1,4 @@
-<div class="container padding-medium flex-column gap-medium">
+<section class="container padding-medium flex-column gap-medium">
   <section class="flex-column gap-small">
     <h1>Appointment Details</h1>
     <form class="form-card" [formGroup]="appointmentForm">
@@ -35,7 +35,7 @@
           </div>
         </div>
         <div>
-          <app-user *ngIf="patient&&patient.type === 1; else patientPlaceholder" [userId]="patientId"></app-user>
+          <app-user *ngIf="patient&&patient.type === 1; else patientPlaceholder" [user]="patient"></app-user>
           <ng-template #patientPlaceholder>
             <div class="item-card-placeholder">
               <span class="bold">Your patient will be displayed here once entered correctly.</span>
@@ -56,7 +56,7 @@
           </div>
         </div>
         <div>
-          <app-user *ngIf="doctor&&doctor.type === 2; else doctorPlaceholder" [userId]="doctorId"></app-user>
+          <app-user *ngIf="doctor&&doctor.type === 2; else doctorPlaceholder" [user]="doctor"></app-user>
           <ng-template #doctorPlaceholder>
             <div class="item-card-placeholder">
               <span class="bold">Your doctor will be displayed here once entered correctly.</span>
@@ -72,16 +72,16 @@
     <p-button [rounded]="true" (click)="navigateToAppointments()">Cancel</p-button>
     <p-confirmPopup>
       <ng-template pTemplate="headless" let-message>
-        <div class="bg-gray-900 text-white border-round p-3">
+        <section class="flex-column padding-small gap-small">
           <span>{{ message.message }}</span>
-          <div class="flex align-items-center gap-2 mt-3">
+          <section class="flex-row gap-small">
             <button (click)="acceptCreate()" pButton label="Create" class="p-button-sm p-button-outlined"></button>
             <button (click)="rejectCreate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
-          </div>
-        </div>
+          </section>
+        </section>
       </ng-template>
     </p-confirmPopup>
   </section>
-</div>
+</section>
 <p-toast></p-toast>
 

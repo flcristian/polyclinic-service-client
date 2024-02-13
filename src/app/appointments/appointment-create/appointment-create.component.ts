@@ -1,4 +1,4 @@
-import {Component, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Confirmation, ConfirmationService} from "primeng/api";
 import {Appointment} from "../models/appointment.model";
@@ -20,12 +20,15 @@ import {Subscription} from "rxjs";
   selector: 'app-appointment-create',
   templateUrl: './appointment-create.component.html'
 })
-export class AppointmentCreateComponent implements OnDestroy {
+export class AppointmentCreateComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription()
   protected patientId: number = 0
   protected patient: User | null = null
   protected doctorId: number = 0
   protected doctor: User | null = null
+
+  private error: string | null = null
+
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
   appointmentForm = new FormGroup({
@@ -53,58 +56,39 @@ export class AppointmentCreateComponent implements OnDestroy {
   constructor(
     public appointmentState: AppointmentStateService,
     public userState: UserStateService,
-    public userAppointmentState: UserAppointmentStateService,
     private router: Router,
     private confirmationService: ConfirmationService
   ) {}
+
+  ngOnInit(){
+    this.subscriptions.add(
+      this.appointmentState.state$.subscribe(data => {
+        this.error = data.error
+      })
+    )
+  }
+
+  ngOnDestroy(){
+    this.subscriptions.unsubscribe()
+  }
 
   navigateToAppointments() {
     this.router.navigate(['/appointments'])
     this.appointmentState.setError(null)
   }
 
-  createUserAppointment(request: CreateUserAppointmentRequest){
-    this.userAppointmentState.createUserAppointment(request).subscribe({
-      next: (userAppointment: UserAppointment) => {
-        this.userAppointmentState.addUserAppointment(userAppointment)
-      },
-      error: (error) => {
-        this.userAppointmentState.setError(error)
-      },
-      complete: () => {
-        this.appointmentState.setLoading(false)
-      }
-    })
-  }
-
   createAppointment(event: Event) {
     let request = this.appointmentForm.value as CreateAppointmentRequest;
+    request.patientId = this.userIdsForm.value.patientId as number
+    request.doctorId = this.userIdsForm.value.doctorId as number
 
     const confirmation: Confirmation = {
       target: event.target as EventTarget,
       message: 'Are you sure you want to create this appointment?',
       accept: () => {
-        this.appointmentState.createAppointment(request).subscribe({
-          next: (appointment: Appointment) => {
-            this.appointmentState.addAppointment(appointment);
+        this.appointmentState.createAppointment(request)
 
-            let userAppointmentRequests: CreateUserAppointmentRequest[] = [
-              {appointmentId: appointment.id, userId: this.userIdsForm.value.patientId as number},
-              {appointmentId: appointment.id, userId: this.userIdsForm.value.doctorId as number}
-            ]
-            userAppointmentRequests.forEach(uar => {
-              this.createUserAppointment(uar)
-            })
-
-            this.navigateToAppointments()
-          },
-          error: (error) => {
-            this.appointmentState.setError(error)
-          },
-          complete: () => {
-            this.appointmentState.setLoading(false)
-          }
-        })
+        if(!this.error) this.navigateToAppointments()
       }
     };
 
@@ -157,10 +141,6 @@ export class AppointmentCreateComponent implements OnDestroy {
         })
       )
     }
-  }
-
-  ngOnDestroy(){
-    this.subscriptions.unsubscribe()
   }
 
   validDates() {

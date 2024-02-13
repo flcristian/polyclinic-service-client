@@ -20,6 +20,8 @@ export class AppointmentSelectRouteComponent implements OnInit, OnDestroy {
   protected editAppointment: boolean = false;
   protected seeUsers: boolean = false;
 
+  private error: string | null = null
+
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
   appointmentForm = new FormGroup({
@@ -41,6 +43,12 @@ export class AppointmentSelectRouteComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    this.subscriptions.add(
+      this.appointmentState.state$.subscribe(data => {
+        this.error = data.error
+      })
+    )
+
     this.route.params.subscribe((params: Params) => {
       this.appointmentId = params['id']
     })
@@ -48,6 +56,7 @@ export class AppointmentSelectRouteComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.appointmentState.getAppointment(this.appointmentId).subscribe({
         next: (appointment) => {
+          console.log(appointment)
           this.appointment = appointment
           this.appointmentState.setSelectedAppointment(appointment)
         },
@@ -76,20 +85,9 @@ export class AppointmentSelectRouteComponent implements OnInit, OnDestroy {
       message: 'Are you sure you want to cancel this appointment?',
       accept: () => {
         if(this.appointment){
-          this.subscriptions.add(
-            this.appointmentState.deleteAppointment(this.appointment.id).subscribe({
-              next: (appointment: Appointment) => {
-                this.appointmentState.removeAppointment(appointment);
-                this.navigateToAppointments()
-              },
-              error: (error) => {
-                this.appointmentState.setError(error)
-              },
-              complete:() => {
-                this.appointmentState.setLoading(false)
-              }
-            })
-          )
+          this.appointmentState.deleteAppointment(this.appointment.id)
+
+          if(!this.error) this.navigateToAppointments()
         }
       }
     };
@@ -113,20 +111,8 @@ export class AppointmentSelectRouteComponent implements OnInit, OnDestroy {
         let request = this.appointmentForm.value as UpdateAppointmentRequest;
         request.id = (this.appointment as Appointment).id;
 
-        this.subscriptions.add(
-          this.appointmentState.updateAppointment(request).subscribe({
-            next: (appointment: Appointment) => {
-              this.appointmentState.editAppointment(appointment)
-              this.navigateToAppointments()
-            },
-            error: (error) => {
-              this.appointmentState.setError(error)
-            },
-            complete:() => {
-              this.appointmentState.setLoading(false)
-            }
-          })
-        )
+        this.appointmentState.updateAppointment(request)
+        if(!this.error) this.navigateToAppointments()
       }
     };
 

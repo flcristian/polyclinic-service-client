@@ -22,7 +22,7 @@ import {MessageService} from "primeng/api";
 export class AppointmentListComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription()
 
-  protected wideScreen = window.innerWidth > 800
+  protected wideScreen = window.innerWidth > 960
 
   // Filtering
   protected filters: boolean = false
@@ -30,11 +30,17 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   protected endDate: Date | null = null
 
   constructor(
-    public appointmentService: AppointmentService,
     public appointmentState: AppointmentStateService,
     private router: Router,
     private messageService: MessageService
   ) { }
+
+  // Listeners
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.wideScreen = (event.target as Window).innerWidth > 960;
+  }
 
   // Interfaces
 
@@ -103,7 +109,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   }
 
   private getFilteredAppointments(startDate: Date, endDate: Date): Subscription{
-    return this.appointmentService.getFilteredAppointments(startDate, endDate).subscribe({
+    return this.appointmentState.getFilteredAppointments(startDate, endDate).subscribe({
       next:(appointments)=>{
         this.appointmentState.setAppointments(appointments)
       },
@@ -119,18 +125,8 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   // Navigation
 
   navigateToAppointment(id: number) {
-    this.appointmentState.getAppointment(id).subscribe({
-      next: (appointment) => {
-        this.appointmentState.setSelectedAppointment(appointment)
-      },
-      error: (error) => {
-        this.appointmentState.setError(error)
-      },
-      complete: () => {
-        this.appointmentState.setLoading(false)
-      }
-    })
-    //this.router.navigate([`/appointment`, id])
+    if(this.wideScreen) this.appointmentState.setSelectedAppointmentById(id)
+    else this.router.navigate([`/appointment`, id])
   }
 
   navigateToAppointmentCreation() {

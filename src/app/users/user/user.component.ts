@@ -9,33 +9,8 @@ import {Subscription} from "rxjs";
   selector: 'app-user',
   templateUrl: './user.component.html'
 })
-export class UserComponent implements OnInit, OnDestroy {
-  private subscriptions = new Subscription()
-  @Input()  userId: number = -1
-  protected user: User | null = null
+export class UserComponent {
+  @Input() user: User | null = null
 
-  constructor(
-    public userService: UserService,
-    public userState: UserStateService,
-  ) { }
-
-  ngOnInit() {
-    this.subscriptions.add(
-      this.userService.getUser(this.userId).subscribe({
-        next: (user) => {
-          this.user = user
-        },
-        error: (error) => {
-          this.userState.setError(error)
-        },
-        complete: () => {
-          this.userState.setLoading(false)
-        }
-      })
-    )
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe()
-  }
+  constructor() { }
 }

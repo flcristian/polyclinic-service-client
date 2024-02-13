@@ -1,13 +1,13 @@
 <div class="container padding-medium flex-column gap-medium">
   <p-button (click)="navigateToAppointments()">Back</p-button>
   <h1>Appointment Details</h1>
-  <app-appointment [appointmentId]="appointmentId"></app-appointment>
+  <app-appointment [appointment]="appointment"></app-appointment>
 
   <section *ngIf="appointment && appointment.userAppointments" class="flex-column gap-small">
     <p-toggleButton [(ngModel)]="seeUsers" onLabel="Hide Users" offLabel="Show Users"></p-toggleButton>
     <section *ngIf="seeUsers" class="flex-column gap-small">
-      <app-user [userId]="appointment.userAppointments[0].userId"></app-user>
-      <app-user [userId]="appointment.userAppointments[1].userId"></app-user>
+      <app-user [user]="appointment.userAppointments[0].user"></app-user>
+      <app-user [user]="appointment.userAppointments[1].user"></app-user>
     </section>
   </section>
 
@@ -33,9 +33,9 @@
         <section>
           <p-confirmPopup>
             <ng-template pTemplate="headless" let-message>
-              <section class="">
+              <section class="flex-column padding-small gap-small">
                 <span>{{ message.message }}</span>
-                <section class="">
+                <section class="flex-row gap-small">
                   <button (click)="acceptUpdate()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
                   <button (click)="rejectUpdate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
                 </section>
@@ -48,9 +48,9 @@
     </section>
     <p-confirmPopup>
       <ng-template pTemplate="headless" let-message>
-        <section class="">
+        <section class="flex-column padding-small gap-small">
           <span>{{ message.message }}</span>
-          <section class="">
+          <section class="flex-row gap-small">
             <button (click)="acceptDelete()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
             <button (click)="rejectDelete()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
           </section>
