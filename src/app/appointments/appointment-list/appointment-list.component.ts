@@ -23,6 +23,7 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription()
 
   protected wideScreen = window.innerWidth > 960
+  protected createEnabled = false
 
   // Filtering
   protected filters: boolean = false
@@ -130,6 +131,10 @@ export class AppointmentListComponent implements OnInit, OnDestroy {
   }
 
   navigateToAppointmentCreation() {
-    this.router.navigate([`/create-appointment`])
+    if(this.wideScreen) {
+      this.appointmentState.setSelectedAppointment(null)
+      this.createEnabled = true
+    }
+    else this.router.navigate([`/create-appointment`])
   }
 }

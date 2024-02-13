@@ -1,6 +1,6 @@
 <ng-container *ngIf="appointmentState.state$ | async as state">
-<div [ngClass]="wideScreen && state.selectedAppointment ? 'container grid-2-to-1' : 'container'">
-  <section>
+<div [ngClass]="wideScreen && (state.selectedAppointment || createEnabled) ? 'container grid-2-to-1' : 'container'">
+  <section class="divider-right">
     <header>
       <h1>Appointments</h1>
       <section class="button-container">
@@ -54,6 +54,7 @@
     </main>
   </section>
   <app-appointment-select-subject *ngIf="wideScreen && state.selectedAppointment"></app-appointment-select-subject>
+  <app-appointment-create *ngIf="createEnabled" (cancelEvent)="createEnabled = false"></app-appointment-create>
 </div>
 </ng-container>
 

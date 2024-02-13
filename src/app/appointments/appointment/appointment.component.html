@@ -1,11 +1,11 @@
 <div class="item-card" *ngIf="appointment">
-  <h1>Appointment #{{appointment.id}}</h1>
+  <h2>Appointment #{{appointment.id}}</h2>
   <section>
-    <span class="bold color-primary">Starts at: </span>
+    <span class="bold color-secondary">Starts at: </span>
     <span>{{appointment.startDate | localeDateString}}</span>
   </section>
   <section>
-    <span class="bold color-primary">Ends at: </span>
+    <span class="bold color-secondary">Ends at: </span>
     <span>{{appointment.endDate | localeDateString}}</span>
   </section>
 </div>

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Confirmation, ConfirmationService} from "primeng/api";
 import {Appointment} from "../models/appointment.model";
@@ -26,8 +26,9 @@ export class AppointmentCreateComponent implements OnInit, OnDestroy {
   protected patient: User | null = null
   protected doctorId: number = 0
   protected doctor: User | null = null
-
   private error: string | null = null
+
+  @Output() cancelEvent = new EventEmitter<void>();
 
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 

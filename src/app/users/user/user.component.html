@@ -1,23 +1,23 @@
 <div class="item-card" *ngIf="user">
-  <h1>{{user.type === 2 ? "Doctor" : "Patient"}} #{{user.id}}</h1>
+  <h2>{{user.type === 2 ? "Doctor" : "Patient"}} #{{user.id}}</h2>
   <section>
-    <span class="bold color-primary">Name: </span>
+    <span class="bold color-secondary">Name: </span>
     <span>{{user.name}}</span>
   </section>
   <section>
-    <span class="bold color-primary">Email: </span>
+    <span class="bold color-secondary">Email: </span>
     <span>{{user.email}}</span>
   </section>
   <section>
-    <span class="bold color-primary">Gender: </span>
+    <span class="bold color-secondary">Gender: </span>
     <span>{{user.gender}}</span>
   </section>
   <section>
-    <span class="bold color-primary">Age: </span>
+    <span class="bold color-secondary">Age: </span>
     <span>{{user.age}}</span>
   </section>
   <section>
-    <span class="bold color-primary">Phone: </span>
+    <span class="bold color-secondary">Phone: </span>
     <span>{{user.phone}}</span>
   </section>
 </div>
