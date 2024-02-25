@@ -27,6 +27,14 @@ import { LocaleDateStringPipe } from './pipes/custom-date/locale-date-string.pip
 import {
   AppointmentSelectSubjectComponent
 } from "./appointments/appointment-select-subject/appointment-select-subject.component";
+import { DoctorUiComponent } from './users/doctor-ui/doctor-ui.component';
+import {MenuModule} from "primeng/menu";
+import { PersonalDetailsComponent } from './users/personal-details/personal-details.component';
+import { UserScheduleComponent } from './users/user-schedule/user-schedule.component';
+import { ChangePasswordComponent } from './users/change-password/change-password.component';
+import { UserAppointmentListComponent } from './user-appointments/user-appointment-list/user-appointment-list.component';
+import {CascadeSelectModule} from "primeng/cascadeselect";
+import {DropdownModule} from "primeng/dropdown";
 
 @NgModule({
   declarations: [
@@ -37,7 +45,12 @@ import {
     AppointmentSelectRouteComponent,
     AppointmentSelectSubjectComponent,
     AppointmentCreateComponent,
-    LocaleDateStringPipe
+    LocaleDateStringPipe,
+    DoctorUiComponent,
+    PersonalDetailsComponent,
+    UserScheduleComponent,
+    ChangePasswordComponent,
+    UserAppointmentListComponent
   ],
   imports: [
     BrowserModule,
@@ -57,7 +70,10 @@ import {
     ToastModule,
     TableModule,
     ToggleButtonModule,
-    ConfirmPopupModule
+    ConfirmPopupModule,
+    MenuModule,
+    CascadeSelectModule,
+    DropdownModule
   ],
   providers: [
     ConfirmationService,

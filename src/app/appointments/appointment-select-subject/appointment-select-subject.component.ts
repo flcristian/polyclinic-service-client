@@ -61,7 +61,7 @@ export class AppointmentSelectSubjectComponent implements OnInit, OnDestroy {
       accept: () => {
         this.appointmentState.deleteSelectedAppointment()
 
-        //if(!this.error) this.navigateToAppointments()
+        if(!this.error) this.navigateToAppointments()
       }
     };
 
@@ -84,7 +84,7 @@ export class AppointmentSelectSubjectComponent implements OnInit, OnDestroy {
         let request = this.appointmentForm.value as UpdateAppointmentRequest;
         this.appointmentState.updateSelectedAppointment(request);
 
-        //if(!this.error) this.navigateToAppointments()
+        if(!this.error) this.navigateToAppointments()
       }
     };
 

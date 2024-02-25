@@ -24,17 +24,47 @@ export class UserStateService {
 
   createUser(request: CreateUserRequest){
     this.setLoading(true)
-    return this.service.createUser(request)
+    this.service.createUser(request).subscribe({
+      next: (user) => {
+        this.addUser(user)
+      },
+      error: (error) => {
+        this.setError(error)
+      },
+      complete: () => {
+        this.setLoading(false)
+      }
+    })
   }
 
   updateUser(request: UpdateUserRequest){
     this.setLoading(true)
-    return this.service.updateUser(request)
+    this.service.updateUser(request).subscribe({
+      next: (user) => {
+        this.editUser(user)
+      },
+      error: (error) => {
+        this.setError(error)
+      },
+      complete: () => {
+        this.setLoading(false)
+      }
+    })
   }
 
   deleteUser(id: number){
     this.setLoading(true)
-    return this.service.deleteUser(id)
+    this.service.deleteUser(id).subscribe({
+      next: (user) => {
+        this.removeUser(user)
+      },
+      error: (error) => {
+        this.setError(error)
+      },
+      complete: () => {
+        this.setLoading(false)
+      }
+    })
   }
 
   getUser(id: number){
