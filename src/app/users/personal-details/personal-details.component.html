@@ -35,13 +35,13 @@
             <label for="age" class="bold">Age: </label>
             <input class="text-input" type="number" formControlName="age" id="age">
           </div>
-          <p-message *ngIf="baseForm.get('age')?.touched&&contactForm.get('age')!.hasError('required')" severity="error" text="Age is required."></p-message>
-          <p-message *ngIf="baseForm.get('age')?.touched&&contactForm.get('age')!.hasError('min')" severity="error" text="Age must be positive."></p-message>
+          <p-message *ngIf="baseForm.get('age')?.touched&&baseForm.get('age')!.hasError('required')" severity="error" text="Age is required."></p-message>
+          <p-message *ngIf="baseForm.get('age')?.touched&&baseForm.get('age')!.hasError('min')" severity="error" text="Age must be positive."></p-message>
         </div>
         <div class="flex-row-align-center gap-small">
           <div>
             <label for="gender" class="bold">Gender: </label>
-            <p-dropdown formControlName="gender"  [options]="genders" id="gender"></p-dropdown>
+            <p-dropdown formControlName="gender" dataKey="value" [options]="genders" id="gender"></p-dropdown>
           </div>
         </div>
         <section>
@@ -56,7 +56,7 @@
               </section>
             </ng-template>
           </p-confirmPopup>
-          <p-button (click)="updateDoctor($event)" [disabled]="contactForm.invalid">Update</p-button>
+          <p-button (click)="updateDoctor($event)" [disabled]="baseForm.invalid">Update</p-button>
         </section>
       </form>
       <p-toggleButton [(ngModel)]="editBase" onIcon="pi pi-times" onLabel="Cancel" offIcon="pi pi-check" offLabel="Edit"></p-toggleButton>
