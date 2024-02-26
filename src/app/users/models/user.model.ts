@@ -1,4 +1,5 @@
 import {UserAppointment} from "../../user-appointments/models/user-appointment.model";
+import {Schedule} from "../../schedules/models/schedule.model";
 
 export interface User{
   id: number,
@@ -9,5 +10,6 @@ export interface User{
   age: number,
   phone: string,
   type: number,
-  userAppointments: UserAppointment[]
+  userAppointments: UserAppointment[],
+  workSchedule: Schedule
 }

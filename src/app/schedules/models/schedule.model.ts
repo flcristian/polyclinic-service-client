@@ -1,16 +1,15 @@
-import {User} from "../../users/models/user.model";
+import {ScheduleSlot} from "./schedule-slot.model";
 
 export interface Schedule {
   doctorId: number,
   mondayScheduleId: number,
-  mondaySchedule: Date,
+  mondaySchedule: ScheduleSlot,
   tuesdayScheduleId: number,
-  tuesdaySchedule: Date,
+  tuesdaySchedule: ScheduleSlot,
   wednesdayScheduleId: number,
-  wednesdaySchedule: Date,
+  wednesdaySchedule: ScheduleSlot,
   thursdayScheduleId: number,
-  thursdaySchedule: Date,
+  thursdaySchedule: ScheduleSlot,
   fridayScheduleId: number,
-  fridaySchedule: Date,
-  doctor: User
+  fridaySchedule: ScheduleSlot
 }

@@ -1,1 +1,29 @@
-<p>user-schedule works!</p>
+<section class="container gap-medium padding-medium">
+  <section class="item-card">
+    <h2>Your Schedule</h2>
+    <section>
+      <h3>Monday</h3>
+      <span class="bold color-secondary"> </span>
+      <span>{{schedule.mondaySchedule.startDate | daytimeString}} - {{schedule.mondaySchedule.endDate | daytimeString}}</span>
+    </section>
+    <section>
+      <h3>Tuesday</h3>
+      <span class="bold color-secondary"> </span>
+      <span>{{schedule.tuesdaySchedule.startDate | daytimeString}} - {{schedule.tuesdaySchedule.endDate | daytimeString}}</span>
+    </section>
+    <section>
+      <h3>Wednesday</h3>
+      <span class="bold color-secondary"> </span>
+      <span>{{schedule.wednesdaySchedule.startDate | daytimeString}} - {{schedule.wednesdaySchedule.endDate | daytimeString}}</span>
+    </section>
+    <section>
+      <h3>Thursday</h3>
+      <span class="bold color-secondary"> </span>
+      <span>{{schedule.thursdaySchedule.startDate | daytimeString}} - {{schedule.thursdaySchedule.endDate | daytimeString}}</span>
+    </section>
+    <section>
+      <h3>Friday</h3>
+      <span class="bold color-secondary"> </span>
+      <span>{{schedule.fridaySchedule.startDate | daytimeString}} - {{schedule.fridaySchedule.endDate | daytimeString}}</span>
+    </section>
+</section>

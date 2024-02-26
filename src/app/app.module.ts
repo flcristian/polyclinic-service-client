@@ -35,6 +35,7 @@ import { ChangePasswordComponent } from './users/change-password/change-password
 import { UserAppointmentListComponent } from './user-appointments/user-appointment-list/user-appointment-list.component';
 import {CascadeSelectModule} from "primeng/cascadeselect";
 import {DropdownModule} from "primeng/dropdown";
+import {DateDaytimeStringPipe} from "./pipes/custom-date/date-daytime-string.pipe";
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import {DropdownModule} from "primeng/dropdown";
     AppointmentSelectSubjectComponent,
     AppointmentCreateComponent,
     LocaleDateStringPipe,
+    DateDaytimeStringPipe,
     DoctorUiComponent,
     PersonalDetailsComponent,
     UserScheduleComponent,

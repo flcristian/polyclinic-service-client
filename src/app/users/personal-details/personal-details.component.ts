@@ -30,17 +30,11 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
     private stateService: DoctorUiStateService,
     private confirmationService: ConfirmationService,
     private router: Router,
-  ) {
-
-
-
-  }
+  ) { }
 
   ngOnInit() {
     this.initializeForms();
     this.subscriptions.add(this.getDoctor());
-
-    
   }
 
   initializeForms() {
@@ -54,7 +48,7 @@ export class PersonalDetailsComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.min(0)
       ]),
-      gender: new FormControl('Female')
+      gender: new FormControl('Male')
     },{updateOn:'change'});
 
     this.contactForm = new FormGroup({
