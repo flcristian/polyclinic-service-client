@@ -35,7 +35,8 @@ import { ChangePasswordComponent } from './users/change-password/change-password
 import { UserAppointmentListComponent } from './user-appointments/user-appointment-list/user-appointment-list.component';
 import {CascadeSelectModule} from "primeng/cascadeselect";
 import {DropdownModule} from "primeng/dropdown";
-import {DateDaytimeStringPipe} from "./pipes/custom-date/date-daytime-string.pipe";
+import {TimeStringPipe} from "./pipes/custom-date/time-string.pipe";
+import {CalendarModule} from "primeng/calendar";
 
 @NgModule({
   declarations: [
@@ -47,36 +48,37 @@ import {DateDaytimeStringPipe} from "./pipes/custom-date/date-daytime-string.pip
     AppointmentSelectSubjectComponent,
     AppointmentCreateComponent,
     LocaleDateStringPipe,
-    DateDaytimeStringPipe,
+    TimeStringPipe,
     DoctorUiComponent,
     PersonalDetailsComponent,
     UserScheduleComponent,
     ChangePasswordComponent,
     UserAppointmentListComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    ProgressSpinnerModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    ButtonModule,
-    ProgressSpinnerModule,
-    ReactiveFormsModule,
-    FormsModule,
-    CommonModule,
-    RippleModule,
-    MessageModule,
-    MessagesModule,
-    ToastModule,
-    TableModule,
-    ToggleButtonModule,
-    ConfirmPopupModule,
-    MenuModule,
-    CascadeSelectModule,
-    DropdownModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        ProgressSpinnerModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        ButtonModule,
+        ProgressSpinnerModule,
+        ReactiveFormsModule,
+        FormsModule,
+        CommonModule,
+        RippleModule,
+        MessageModule,
+        MessagesModule,
+        ToastModule,
+        TableModule,
+        ToggleButtonModule,
+        ConfirmPopupModule,
+        MenuModule,
+        CascadeSelectModule,
+        DropdownModule,
+        CalendarModule
+    ],
   providers: [
     ConfirmationService,
     MessageService,

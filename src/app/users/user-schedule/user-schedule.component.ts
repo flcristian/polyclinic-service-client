@@ -5,6 +5,7 @@ import {Schedule} from "../../schedules/models/schedule.model";
 import {DoctorUiStateService} from "../services/doctor-ui-state.service";
 import {Router} from "@angular/router";
 import {ConfirmationService} from "primeng/api";
+import {Time} from "@angular/common";
 
 @Component({
   selector: 'app-user-schedule',
@@ -17,32 +18,62 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
     mondayScheduleId: 0,
     mondaySchedule: {
       id: 0,
-      startDate: new Date(),
-      endDate: new Date()
+      startTime: {
+        hours: 0,
+        minutes: 0
+      },
+      endTime: {
+        hours: 0,
+        minutes: 0
+      }
     },
     tuesdayScheduleId: 0,
     tuesdaySchedule: {
       id: 0,
-      startDate: new Date(),
-      endDate: new Date()
+      startTime: {
+        hours: 0,
+        minutes: 0
+      },
+      endTime: {
+        hours: 0,
+        minutes: 0
+      }
     },
     wednesdayScheduleId: 0,
     wednesdaySchedule: {
       id: 0,
-      startDate: new Date(),
-      endDate: new Date()
+      startTime: {
+        hours: 0,
+        minutes: 0
+      },
+      endTime: {
+        hours: 0,
+        minutes: 0
+      }
     },
     thursdayScheduleId: 0,
     thursdaySchedule: {
       id: 0,
-      startDate: new Date(),
-      endDate: new Date()
+      startTime: {
+        hours: 0,
+        minutes: 0
+      },
+      endTime: {
+        hours: 0,
+        minutes: 0
+      }
     },
     fridayScheduleId: 0,
     fridaySchedule: {
       id: 0,
-      startDate: new Date(),
-      endDate: new Date()
+      startTime: {
+        hours: 0,
+        minutes: 0
+      },
+      endTime: {
+        hours: 0,
+        minutes: 0
+      }
     }
   }
   protected doctor: User = {
@@ -65,16 +96,15 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.subscriptions.add(this.getDoctor())
+    this.subscriptions.add(this.getData())
   }
 
-  getDoctor(){
+  getData(){
     return this.stateService.state$.subscribe({
       next: (data) => {
-        if(data.doctor && data.doctor.workSchedule) {
+        if(data.doctor && data.schedule) {
           this.doctor = data.doctor
-          this.schedule = data.doctor!.workSchedule
-          console.log(this.schedule)
+          this.schedule = data.schedule
         }
       },
       error: (error) => {

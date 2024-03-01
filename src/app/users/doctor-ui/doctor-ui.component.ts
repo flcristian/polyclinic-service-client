@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {User} from "../models/user.model";
 import {DoctorUiStateService} from "../services/doctor-ui-state.service";
 import {Subscription} from "rxjs";
+import {Schedule} from "../../schedules/models/schedule.model";
 
 @Component({
   selector: 'app-doctor-ui',
@@ -75,6 +76,20 @@ export class DoctorUiComponent implements OnInit {
       this.stateService.getUser(3).subscribe({
         next: (user: User) => {
           this.stateService.setDoctor(user)
+        },
+        error: (error) => {
+          this.stateService.setError(error)
+        },
+        complete: () => {
+          this.stateService.setLoading(false)
+        }
+      })
+    )
+
+    this.subscriptions.add(
+      this.stateService.getSchedule(3, new Date()).subscribe({
+        next: (schedule: Schedule) => {
+          this.stateService.setSchedule(schedule)
         },
         error: (error) => {
           this.stateService.setError(error)

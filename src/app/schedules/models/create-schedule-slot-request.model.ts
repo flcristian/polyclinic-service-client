@@ -1,7 +1,6 @@
 import {Time} from "@angular/common";
 
-export interface ScheduleSlot {
-  id: number,
+export interface CreateScheduleSlotRequest{
   startTime: Time,
   endTime: Time
 }

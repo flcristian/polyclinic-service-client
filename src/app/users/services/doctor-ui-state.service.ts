@@ -5,6 +5,8 @@ import {UserService} from "./user.service";
 import {CreateUserRequest} from "../models/create-user-request.model";
 import {UpdateUserRequest} from "../models/update-user-request.model";
 import {DoctorUiState} from "./doctor-ui-state";
+import {Schedule} from "../../schedules/models/schedule.model";
+import {ScheduleService} from "../../schedules/services/schedule.service";
 
 @Injectable({
   providedIn: 'root'
@@ -12,25 +14,34 @@ import {DoctorUiState} from "./doctor-ui-state";
 export class DoctorUiStateService {
   private stateSubject = new BehaviorSubject<DoctorUiState>({
     doctor: null,
+    schedule: null,
     loading: false,
     error: null
   });
   state$: Observable<DoctorUiState> = this.stateSubject.asObservable();
 
-  constructor(private service: UserService) { }
+  constructor(
+    private userService: UserService,
+    private scheduleService: ScheduleService
+  ) { }
 
   // For testing
 
   getUser(id: number){
     this.setLoading(true)
-    return this.service.getUser(id)
+    return this.userService.getUser(id)
+  }
+
+  getSchedule(doctorId: number, date: Date){
+    this.setLoading(true)
+    return this.scheduleService.getSchedule(doctorId, date)
   }
 
   // Service calls
 
   updateUser(request: UpdateUserRequest){
     this.setLoading(true)
-    this.service.updateUser(request).subscribe({
+    this.userService.updateUser(request).subscribe({
       next: (user) => {
         this.setDoctor(user)
       },
@@ -47,6 +58,10 @@ export class DoctorUiStateService {
 
   setDoctor(doctor: User){
     this.setState({doctor})
+  }
+
+  setSchedule(schedule: Schedule){
+    this.setState({schedule})
   }
 
   setLoading(loading: boolean) {
