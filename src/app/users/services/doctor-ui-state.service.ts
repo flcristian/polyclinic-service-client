@@ -7,6 +7,8 @@ import {UpdateUserRequest} from "../models/update-user-request.model";
 import {DoctorUiState} from "./doctor-ui-state";
 import {Schedule} from "../../schedules/models/schedule.model";
 import {ScheduleService} from "../../schedules/services/schedule.service";
+import {UpdateAppointmentRequest} from "../../appointments/models/update-appointment-request.model";
+import {UpdateScheduleRequest} from "../../schedules/models/update-schedule-request.model";
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,7 @@ export class DoctorUiStateService {
   private stateSubject = new BehaviorSubject<DoctorUiState>({
     doctor: null,
     schedule: null,
+    nextSchedule: null,
     loading: false,
     error: null
   });
@@ -25,7 +28,7 @@ export class DoctorUiStateService {
     private scheduleService: ScheduleService
   ) { }
 
-  // For testing
+  // Service calls
 
   getUser(id: number){
     this.setLoading(true)
@@ -37,7 +40,26 @@ export class DoctorUiStateService {
     return this.scheduleService.getSchedule(doctorId, date)
   }
 
-  // Service calls
+  getNextSchedule(doctorId: number, date: Date){
+    this.setLoading(true)
+    // date.setDate(date.getDate() + 7)
+    return this.scheduleService.getSchedule(doctorId, date)
+  }
+
+  updateNextSchedule(request: UpdateScheduleRequest){
+    this.setLoading(true)
+    this.scheduleService.updateSchedule(request).subscribe({
+      next: (newSchedule) => {
+        this.setNextSchedule(newSchedule)
+      },
+      error: (error) => {
+        this.setError(error)
+      },
+      complete: () => {
+        this.setLoading(false)
+      }
+    })
+  }
 
   updateUser(request: UpdateUserRequest){
     this.setLoading(true)
@@ -62,6 +84,10 @@ export class DoctorUiStateService {
 
   setSchedule(schedule: Schedule){
     this.setState({schedule})
+  }
+
+  setNextSchedule(nextSchedule: Schedule){
+    this.setState({nextSchedule})
   }
 
   setLoading(loading: boolean) {

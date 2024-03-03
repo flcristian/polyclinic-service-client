@@ -86,10 +86,25 @@ export class DoctorUiComponent implements OnInit {
       })
     )
 
+    let today = new Date()
     this.subscriptions.add(
-      this.stateService.getSchedule(3, new Date()).subscribe({
+      this.stateService.getSchedule(3, today).subscribe({
         next: (schedule: Schedule) => {
           this.stateService.setSchedule(schedule)
+        },
+        error: (error) => {
+          this.stateService.setError(error)
+        },
+        complete: () => {
+          this.stateService.setLoading(false)
+        }
+      })
+    )
+
+    this.subscriptions.add(
+      this.stateService.getNextSchedule(3, today).subscribe({
+        next: (nextSchedule: Schedule) => {
+          this.stateService.setNextSchedule(nextSchedule)
         },
         error: (error) => {
           this.stateService.setError(error)

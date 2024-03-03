@@ -37,6 +37,7 @@ import {CascadeSelectModule} from "primeng/cascadeselect";
 import {DropdownModule} from "primeng/dropdown";
 import {TimeStringPipe} from "./pipes/custom-date/time-string.pipe";
 import {CalendarModule} from "primeng/calendar";
+import { CapitalizePipe } from './pipes/strings/capitalize.pipe';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import {CalendarModule} from "primeng/calendar";
     PersonalDetailsComponent,
     UserScheduleComponent,
     ChangePasswordComponent,
-    UserAppointmentListComponent
+    UserAppointmentListComponent,
+    CapitalizePipe
   ],
     imports: [
         BrowserModule,

@@ -1,4 +1,4 @@
-import {Time} from "@angular/common";
+import {Time} from "./time.model";
 
 export interface CreateScheduleSlotRequest{
   startTime: Time,

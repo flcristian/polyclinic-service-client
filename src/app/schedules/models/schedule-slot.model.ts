@@ -1,4 +1,5 @@
-import {Time} from "@angular/common";
+import {Time} from "./time.model";
+
 
 export interface ScheduleSlot {
   id: number,
