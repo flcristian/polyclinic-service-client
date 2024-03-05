@@ -160,35 +160,31 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
   protected editNextSchedule = false;
   protected days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
 
-  private defaultTime: Time = { hours: 0, minutes: 0 };
-  protected timeForm = (time? : Time) => new FormGroup({
-    hours: new FormControl(time ? time.hours : 0, Validators.required),
-    minutes: new FormControl(time ? time.minutes : 0, Validators.required),
-  })
+  baseTime: Time = {hours:0, minutes: 0};
   protected nextScheduleForm = new FormGroup({
     mondaySchedule: new FormGroup({
-      startTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
-      endTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
+      startTime: new FormControl(this.baseTime, Validators.required),
+      endTime: new FormControl(this.baseTime, Validators.required),
     }),
 
     tuesdaySchedule: new FormGroup({
-      startTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
-      endTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
+      startTime: new FormControl(this.baseTime, Validators.required),
+      endTime: new FormControl(this.baseTime, Validators.required),
     }),
 
     wednesdaySchedule: new FormGroup({
-      startTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
-      endTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
+      startTime: new FormControl(this.baseTime, Validators.required),
+      endTime: new FormControl(this.baseTime, Validators.required),
     }),
 
     thursdaySchedule: new FormGroup({
-      startTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
-      endTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
+      startTime: new FormControl(this.baseTime, Validators.required),
+      endTime: new FormControl(this.baseTime, Validators.required),
     }),
 
     fridaySchedule: new FormGroup({
-      startTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
-      endTime: new FormControl(this.timeForm(this.defaultTime), Validators.required),
+      startTime: new FormControl(this.baseTime, Validators.required),
+      endTime: new FormControl(this.baseTime, Validators.required),
     }),
   });
 
@@ -202,6 +198,10 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.add(this.getData())
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe()
   }
 
   getData(){
@@ -221,46 +221,15 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe()
-  }
-
   updateNextSchedule(event: Event){
     const confirmation: Confirmation = {
-      target: event.target as EventTarget,
-      message: 'Are you sure you want to update this appointment?',
-      accept: () => {
-        let values = this.nextScheduleForm.value
-
-        let nextWeek = new Date()
-        nextWeek.setDate(nextWeek.getDate() + 7)
-        let request: UpdateScheduleRequest = {
-          doctorId: this.doctor.id,
-          year: nextWeek.getFullYear(),
-          weekNumber: DatesUtility.getWeekNumber(nextWeek),
-          mondaySchedule: {
-            startTime: values.mondaySchedule?.startTime as Time,
-            endTime: values.mondaySchedule?.endTime as Time
-          },
-          tuesdaySchedule: {
-            startTime: values.tuesdaySchedule?.startTime as Time,
-            endTime: values.tuesdaySchedule?.endTime as Time
-          },
-          wednesdaySchedule: {
-            startTime: values.wednesdaySchedule?.startTime as Time,
-            endTime: values.wednesdaySchedule?.endTime as Time
-          },
-          thursdaySchedule: {
-            startTime: values.thursdaySchedule?.startTime as Time,
-            endTime: values.thursdaySchedule?.endTime as Time
-          },
-          fridaySchedule: {
-            startTime: values.fridaySchedule?.startTime as Time,
-            endTime: values.fridaySchedule?.endTime as Time
-          }
-        };
-        console.log(request)
-        this.stateService.updateNextSchedule(request);
+    target: event.target as EventTarget,
+    message: 'Are you sure you want to update this appointment?',
+    accept: () => {
+      let values = this.nextScheduleForm.value as Schedule
+      console.log(values)
+      let request = this.createNewUpdateRequest();
+      this.stateService.updateNextSchedule(request);
       }
     };
 
@@ -274,4 +243,38 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
   rejectUpdate() {
     this.confirmPopup.reject()
   }
+
+  createNewUpdateRequest(): UpdateScheduleRequest {
+    let nextWeek = new Date()
+    nextWeek.setDate(nextWeek.getDate() + 7)
+    let baseTime: Time = {hours: 0, minutes: 0}
+
+    return {
+      doctorId: this.doctor.id,
+      year: nextWeek.getFullYear(),
+      weekNumber: DatesUtility.getWeekNumber(nextWeek),
+      mondaySchedule: {
+        startTime: baseTime,
+        endTime: baseTime
+      },
+      tuesdaySchedule: {
+        startTime: baseTime,
+        endTime: baseTime
+      },
+      wednesdaySchedule: {
+        startTime: baseTime,
+        endTime: baseTime
+      },
+      thursdaySchedule: {
+        startTime: baseTime,
+        endTime: baseTime
+      },
+      fridaySchedule: {
+        startTime: baseTime,
+        endTime: baseTime
+      }
+    };
+  }
+
+  //addUpdateRequestValues(request: UpdateScheduleRequest, values: FormGroup)
 }

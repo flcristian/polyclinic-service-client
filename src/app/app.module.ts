@@ -38,6 +38,7 @@ import {DropdownModule} from "primeng/dropdown";
 import {TimeStringPipe} from "./pipes/custom-date/time-string.pipe";
 import {CalendarModule} from "primeng/calendar";
 import { CapitalizePipe } from './pipes/strings/capitalize.pipe';
+import {SchedulerModule} from "@progress/kendo-angular-scheduler";
 
 @NgModule({
   declarations: [
@@ -79,7 +80,8 @@ import { CapitalizePipe } from './pipes/strings/capitalize.pipe';
         MenuModule,
         CascadeSelectModule,
         DropdownModule,
-        CalendarModule
+        CalendarModule,
+        SchedulerModule
     ],
   providers: [
     ConfirmationService,
