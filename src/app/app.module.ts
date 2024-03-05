@@ -80,8 +80,7 @@ import {SchedulerModule} from "@progress/kendo-angular-scheduler";
         MenuModule,
         CascadeSelectModule,
         DropdownModule,
-        CalendarModule,
-        SchedulerModule
+        CalendarModule
     ],
   providers: [
     ConfirmationService,
