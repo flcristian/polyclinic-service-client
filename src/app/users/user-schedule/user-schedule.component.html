@@ -1,92 +1,94 @@
-<section class="container gap-medium padding-medium">
-  <section class="item-card">
-    <h2>Your Schedule</h2>
-    <section>
-      <h3>Monday</h3>
-      <span>{{schedule.mondaySchedule.startTime | timeString}} - {{schedule.mondaySchedule.endTime | timeString}}</span>
-    </section>
-    <section>
-      <h3>Tuesday</h3>
-      <span>{{schedule.tuesdaySchedule.startTime | timeString}} - {{schedule.tuesdaySchedule.endTime | timeString}}</span>
-    </section>
-    <section>
-      <h3>Wednesday</h3>
-      <span>{{schedule.wednesdaySchedule.startTime | timeString}} - {{schedule.wednesdaySchedule.endTime | timeString}}</span>
-    </section>
-    <section>
-      <h3>Thursday</h3>
-      <span>{{schedule.thursdaySchedule.startTime | timeString}} - {{schedule.thursdaySchedule.endTime | timeString}}</span>
-    </section>
-    <section>
-      <h3>Friday</h3>
-      <span>{{schedule.fridaySchedule.startTime | timeString}} - {{schedule.fridaySchedule.endTime | timeString}}</span>
-    </section>
-  </section>
-
-  <section *ngIf="nextScheduleExists" class="container gap-small">
-    <p-toggleButton [(ngModel)]="editNextSchedule" onLabel="Cancel" offLabel="Modify next week schedule"></p-toggleButton>
-    <section class="item-card" *ngIf="!editNextSchedule; else modifyNextSchedule">
-      <h2>Next Week Schedule</h2>
+<ng-container *ngIf="stateService.state$ | async as state">
+  <section class="container gap-medium padding-medium" *ngIf="!(state.loadingDoctor || state.loadingSchedule || state.loadingNextSchedule)">
+    <section class="item-card">
+      <h2>Your Schedule</h2>
       <section>
         <h3>Monday</h3>
-        <span>{{nextSchedule.mondaySchedule.startTime | timeString}} - {{nextSchedule.mondaySchedule.endTime | timeString}}</span>
+        <span>{{state.schedule!.mondaySchedule.startTime | timeString}} - {{state.schedule!.mondaySchedule.endTime | timeString}}</span>
       </section>
       <section>
         <h3>Tuesday</h3>
-        <span>{{nextSchedule.tuesdaySchedule.startTime | timeString}} - {{nextSchedule.tuesdaySchedule.endTime | timeString}}</span>
+        <span>{{state.schedule!.tuesdaySchedule.startTime | timeString}} - {{state.schedule!.tuesdaySchedule.endTime | timeString}}</span>
       </section>
       <section>
         <h3>Wednesday</h3>
-        <span>{{nextSchedule.wednesdaySchedule.startTime | timeString}} - {{nextSchedule.wednesdaySchedule.endTime | timeString}}</span>
+        <span>{{state.schedule!.wednesdaySchedule.startTime | timeString}} - {{state.schedule!.wednesdaySchedule.endTime | timeString}}</span>
       </section>
       <section>
         <h3>Thursday</h3>
-        <span>{{nextSchedule.thursdaySchedule.startTime | timeString}} - {{nextSchedule.thursdaySchedule.endTime | timeString}}</span>
+        <span>{{state.schedule!.thursdaySchedule.startTime | timeString}} - {{state.schedule!.thursdaySchedule.endTime | timeString}}</span>
       </section>
       <section>
         <h3>Friday</h3>
-        <span>{{nextSchedule.fridaySchedule.startTime | timeString}} - {{nextSchedule.fridaySchedule.endTime | timeString}}</span>
+        <span>{{state.schedule!.fridaySchedule.startTime | timeString}} - {{state.schedule!.fridaySchedule.endTime | timeString}}</span>
       </section>
     </section>
-    <ng-template #modifyNextSchedule>
-      <form [formGroup]="nextScheduleForm" class="item-card">
+
+    <section *ngIf="nextScheduleExists" class="container gap-small">
+      <p-toggleButton [(ngModel)]="editNextSchedule" onLabel="Cancel" offLabel="Modify next week schedule"></p-toggleButton>
+      <section class="item-card" *ngIf="!editNextSchedule; else modifyNextSchedule">
         <h2>Next Week Schedule</h2>
-
-        <section formGroupName="{{day + 'Schedule'}}" *ngFor="let day of days">
-          <h3>{{day | capitalize}}</h3>
-
-          <div>
-            <label for="{{day}}StartTime">Start Time: </label>
-
-            <input class="datetime" type="time" formControlName="startTime" id="{{day}}StartTime">
-
-            <p-message *ngIf="nextScheduleForm.get(day + 'Schedule.startTime')?.touched && nextScheduleForm.get(day + 'Schedule.startTime')?.hasError('required')" severity="error" text="Start time is required."></p-message>
-          </div>
-
-          <div>
-            <label for="{{day}}EndTime">End Time: </label>
-
-            <input class="datetime" type="time" formControlName="endTime" id="{{day}}EndTime">
-
-            <p-message *ngIf="nextScheduleForm.get(day + 'Schedule.endTime')?.touched && nextScheduleForm.get(day + 'Schedule.endTime')?.hasError('required')" severity="error" text="End time is required."></p-message>
-            <p-message *ngIf="nextScheduleForm.get(day + 'Schedule.endTime')?.hasError('range')" severity="error" text="Start time must be before end time."></p-message>
-          </div>
+        <section>
+          <h3>Monday</h3>
+          <span>{{nextSchedule.mondaySchedule.startTime | timeString}} - {{nextSchedule.mondaySchedule.endTime | timeString}}</span>
         </section>
         <section>
-          <p-confirmPopup>
-            <ng-template pTemplate="headless" let-message>
-              <section class="flex-column padding-small gap-small">
-                <span>{{ message.message }}</span>
-                <section class="flex-row gap-small">
-                  <button (click)="acceptUpdate()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
-                  <button (click)="rejectUpdate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
-                </section>
-              </section>
-            </ng-template>
-          </p-confirmPopup>
-          <p-button (click)="updateNextSchedule($event)" [disabled]="nextScheduleForm.invalid">Modify</p-button>
+          <h3>Tuesday</h3>
+          <span>{{nextSchedule.tuesdaySchedule.startTime | timeString}} - {{nextSchedule.tuesdaySchedule.endTime | timeString}}</span>
         </section>
-      </form>
-    </ng-template>
+        <section>
+          <h3>Wednesday</h3>
+          <span>{{nextSchedule.wednesdaySchedule.startTime | timeString}} - {{nextSchedule.wednesdaySchedule.endTime | timeString}}</span>
+        </section>
+        <section>
+          <h3>Thursday</h3>
+          <span>{{nextSchedule.thursdaySchedule.startTime | timeString}} - {{nextSchedule.thursdaySchedule.endTime | timeString}}</span>
+        </section>
+        <section>
+          <h3>Friday</h3>
+          <span>{{nextSchedule.fridaySchedule.startTime | timeString}} - {{nextSchedule.fridaySchedule.endTime | timeString}}</span>
+        </section>
+      </section>
+      <ng-template #modifyNextSchedule>
+        <form [formGroup]="nextScheduleForm" class="item-card">
+          <h2>Next Week Schedule</h2>
+
+          <section formGroupName="{{day + 'Schedule'}}" *ngFor="let day of days">
+            <h3>{{day | capitalize}}</h3>
+
+            <div>
+              <label for="{{day}}StartTime">Start Time: </label>
+
+              <input class="datetime" type="time" formControlName="startTime" id="{{day}}StartTime">
+
+              <p-message *ngIf="nextScheduleForm.get(day + 'Schedule.startTime')?.touched && nextScheduleForm.get(day + 'Schedule.startTime')?.hasError('required')" severity="error" text="Start time is required."></p-message>
+            </div>
+
+            <div>
+              <label for="{{day}}EndTime">End Time: </label>
+
+              <input class="datetime" type="time" formControlName="endTime" id="{{day}}EndTime">
+
+              <p-message *ngIf="nextScheduleForm.get(day + 'Schedule.endTime')?.touched && nextScheduleForm.get(day + 'Schedule.endTime')?.hasError('required')" severity="error" text="End time is required."></p-message>
+              <p-message *ngIf="nextScheduleForm.get(day + 'Schedule.endTime')?.hasError('range')" severity="error" text="Start time must be before end time."></p-message>
+            </div>
+          </section>
+          <section>
+            <p-confirmPopup>
+              <ng-template pTemplate="headless" let-message>
+                <section class="flex-column padding-small gap-small">
+                  <span>{{ message.message }}</span>
+                  <section class="flex-row gap-small">
+                    <button (click)="acceptUpdate()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
+                    <button (click)="rejectUpdate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+                  </section>
+                </section>
+              </ng-template>
+            </p-confirmPopup>
+            <p-button (click)="updateNextSchedule($event)" [disabled]="nextScheduleForm.invalid">Modify</p-button>
+          </section>
+        </form>
+      </ng-template>
+    </section>
   </section>
-</section>
+</ng-container>

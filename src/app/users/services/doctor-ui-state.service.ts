@@ -18,7 +18,9 @@ export class DoctorUiStateService {
     doctor: null,
     schedule: null,
     nextSchedule: null,
-    loading: false,
+    loadingDoctor: false,
+    loadingSchedule: false,
+    loadingNextSchedule: false,
     error: null
   });
   state$: Observable<DoctorUiState> = this.stateSubject.asObservable();
@@ -31,23 +33,22 @@ export class DoctorUiStateService {
   // Service calls
 
   getUser(id: number){
-    this.setLoading(true)
+    this.setLoadingDoctor(true)
     return this.userService.getUser(id)
   }
 
   getSchedule(doctorId: number, date: Date){
-    this.setLoading(true)
+    this.setLoadingSchedule(true)
     return this.scheduleService.getSchedule(doctorId, date)
   }
 
   getNextSchedule(doctorId: number, date: Date){
-    this.setLoading(true)
-    // date.setDate(date.getDate() + 7)
+    this.setLoadingNextSchedule(true)
     return this.scheduleService.getSchedule(doctorId, date)
   }
 
   updateNextSchedule(request: UpdateScheduleRequest){
-    this.setLoading(true)
+    this.setLoadingSchedule(true)
     this.scheduleService.updateSchedule(request).subscribe({
       next: (newSchedule) => {
         this.setNextSchedule(newSchedule)
@@ -56,13 +57,13 @@ export class DoctorUiStateService {
         this.setError(error)
       },
       complete: () => {
-        this.setLoading(false)
+        this.setLoadingSchedule(false)
       }
     })
   }
 
   updateUser(request: UpdateUserRequest){
-    this.setLoading(true)
+    this.setLoadingDoctor(true)
     this.userService.updateUser(request).subscribe({
       next: (user) => {
         this.setDoctor(user)
@@ -71,7 +72,7 @@ export class DoctorUiStateService {
         this.setError(error)
       },
       complete: () => {
-        this.setLoading(false)
+        this.setLoadingDoctor(false)
       }
     })
   }
@@ -90,8 +91,16 @@ export class DoctorUiStateService {
     this.setState({nextSchedule})
   }
 
-  setLoading(loading: boolean) {
-    this.setState({loading})
+  setLoadingDoctor(loadingDoctor: boolean) {
+    this.setState({loadingDoctor})
+  }
+
+  setLoadingSchedule(loadingSchedule: boolean) {
+    this.setState({loadingSchedule})
+  }
+
+  setLoadingNextSchedule(loadingNextSchedule: boolean) {
+    this.setState({loadingNextSchedule})
   }
 
   setError(error: string | null) {

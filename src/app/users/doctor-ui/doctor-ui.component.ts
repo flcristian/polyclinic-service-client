@@ -81,7 +81,7 @@ export class DoctorUiComponent implements OnInit {
           this.stateService.setError(error)
         },
         complete: () => {
-          this.stateService.setLoading(false)
+          this.stateService.setLoadingDoctor(false)
         }
       })
     )
@@ -96,11 +96,12 @@ export class DoctorUiComponent implements OnInit {
           this.stateService.setError(error)
         },
         complete: () => {
-          this.stateService.setLoading(false)
+          this.stateService.setLoadingSchedule(false)
         }
       })
     )
 
+    today.setDate(today.getDate() + 7)
     this.subscriptions.add(
       this.stateService.getNextSchedule(3, today).subscribe({
         next: (nextSchedule: Schedule) => {
@@ -110,7 +111,7 @@ export class DoctorUiComponent implements OnInit {
           this.stateService.setError(error)
         },
         complete: () => {
-          this.stateService.setLoading(false)
+          this.stateService.setLoadingNextSchedule(false)
         }
       })
     )

@@ -11,6 +11,7 @@ import {UpdateScheduleRequest} from "../../schedules/models/update-schedule-requ
 import {DatesUtility} from "../../utility/dates.utility";
 import {ConfirmPopup} from "primeng/confirmpopup";
 import {Time} from "../../schedules/models/time.model";
+import {ScheduleSlot} from "../../schedules/models/schedule-slot.model";
 
 @Component({
   selector: 'app-user-schedule',
@@ -188,10 +189,11 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
     }),
   });
 
+
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
   constructor(
-    private stateService: DoctorUiStateService,
+    protected stateService: DoctorUiStateService,
     private confirmationService: ConfirmationService,
     private router: Router
   ) { }
@@ -204,11 +206,19 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe()
   }
 
+  stringToTime(timeString: string): Time {
+    if(typeof(timeString) != "string"){
+      return {hours: 0, minutes: 0}
+    }
+    const [hours, minutes] = timeString.split(':').map(Number);
+
+    return { hours,minutes};
+  }
+
   getData(){
     return this.stateService.state$.subscribe({
       next: (data) => {
         if(data.doctor) this.doctor = data.doctor
-        if(data.schedule) this.schedule = data.schedule
 
         if(data.nextSchedule){
           this.nextSchedule = data.nextSchedule
@@ -221,13 +231,28 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
     })
   }
 
+  getScheduleTimes() {
+    const scheduleTimes = {};
+    const days = ['mondaySchedule', 'tuesdaySchedule', 'wednesdaySchedule', 'thursdaySchedule', 'fridaySchedule'];
+    for (const day of days) {
+      const daySchedule = this.nextScheduleForm.get(`${day}`)!.value;
+
+      // TODO
+      // @ts-ignore
+      scheduleTimes[day] = {
+        startTime: this.stringToTime(daySchedule['startTime'] ),
+        endTime: this.stringToTime(daySchedule['endTime']),
+      };
+    }
+
+    return scheduleTimes;
+  }
+
   updateNextSchedule(event: Event){
     const confirmation: Confirmation = {
     target: event.target as EventTarget,
     message: 'Are you sure you want to update this appointment?',
     accept: () => {
-      let values = this.nextScheduleForm.value as Schedule
-      console.log(values)
       let request = this.createNewUpdateRequest();
       this.stateService.updateNextSchedule(request);
       }
@@ -244,35 +269,22 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
     this.confirmPopup.reject()
   }
 
-  createNewUpdateRequest(): UpdateScheduleRequest {
+  createNewUpdateRequest(): UpdateScheduleRequest{
     let nextWeek = new Date()
     nextWeek.setDate(nextWeek.getDate() + 7)
-    let baseTime: Time = {hours: 0, minutes: 0}
+
+    let scheduleTimes = this.getScheduleTimes() as Schedule
+
 
     return {
       doctorId: this.doctor.id,
       year: nextWeek.getFullYear(),
       weekNumber: DatesUtility.getWeekNumber(nextWeek),
-      mondaySchedule: {
-        startTime: baseTime,
-        endTime: baseTime
-      },
-      tuesdaySchedule: {
-        startTime: baseTime,
-        endTime: baseTime
-      },
-      wednesdaySchedule: {
-        startTime: baseTime,
-        endTime: baseTime
-      },
-      thursdaySchedule: {
-        startTime: baseTime,
-        endTime: baseTime
-      },
-      fridaySchedule: {
-        startTime: baseTime,
-        endTime: baseTime
-      }
+      mondaySchedule: scheduleTimes.mondaySchedule,
+      tuesdaySchedule: scheduleTimes.tuesdaySchedule,
+      wednesdaySchedule: scheduleTimes.wednesdaySchedule,
+      thursdaySchedule: scheduleTimes.thursdaySchedule,
+      fridaySchedule: scheduleTimes.fridaySchedule
     };
   }
 

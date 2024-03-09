@@ -5,6 +5,8 @@ export interface DoctorUiState{
   doctor: User | null,
   schedule: Schedule | null,
   nextSchedule: Schedule | null,
-  loading: boolean,
+  loadingDoctor: boolean,
+  loadingSchedule: boolean,
+  loadingNextSchedule: boolean,
   error: string | null
 }
