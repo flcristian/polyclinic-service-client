@@ -20,16 +20,16 @@
       <h2>Edit Base Information</h2>
       <form [formGroup]="baseForm" class="container gap-small">
         <div class="flex-row-align-center gap-small">
-          <div>
+          <div class="container gap-small">
             <label for="name" class="bold">Name: </label>
             <input class="text-input" type="text" formControlName="name" id="name">
           </div>
           <p-message *ngIf="baseForm.get('name')?.touched&&baseForm.get('name')!.hasError('required')" severity="error" text="Name is required."></p-message>
-          <p-message *ngIf="baseForm.get('name')?.touched&&baseForm.get('name')!.hasError('minLength')" severity="error" text="Name must have at least 2 characters."></p-message>
-          <p-message *ngIf="baseForm.get('name')?.touched&&baseForm.get('name')!.hasError('minLength')" severity="error" text="Name must have at maximum 128 characters."></p-message>
+          <p-message *ngIf="baseForm.get('name')?.touched&&baseForm.get('name')!.hasError('minlength')" severity="error" text="Name must have at least 2 characters."></p-message>
+          <p-message *ngIf="baseForm.get('name')?.touched&&baseForm.get('name')!.hasError('maxlength')" severity="error" text="Name must have at maximum 128 characters."></p-message>
         </div>
         <div class="flex-row-align-center gap-small">
-          <div>
+          <div class="container gap-small">
             <label for="age" class="bold">Age: </label>
             <input class="text-input" type="number" formControlName="age" id="age">
           </div>
@@ -37,7 +37,7 @@
           <p-message *ngIf="baseForm.get('age')?.touched&&baseForm.get('age')!.hasError('min')" severity="error" text="Age must be positive."></p-message>
         </div>
         <div class="flex-row-align-center gap-small">
-          <div>
+          <div class="container gap-small">
             <label for="gender" class="bold">Gender: </label>
             <p-dropdown formControlName="gender" [options]="genders" id="gender"></p-dropdown>
           </div>
@@ -77,7 +77,7 @@
       <h2>Edit Contact Information</h2>
       <form [formGroup]="contactForm" class="container gap-small">
         <div class="flex-row-align-center gap-small">
-          <div>
+          <div class="container gap-small">
             <label for="email" class="bold">Email: </label>
             <input class="text-input" type="text" formControlName="email" id="email">
           </div>
@@ -85,7 +85,7 @@
           <p-message *ngIf="contactForm.get('email')?.touched&&contactForm.get('email')!.hasError('email')" severity="error" text="Email is invalid."></p-message>
         </div>
         <div class="flex-row-align-center gap-small">
-          <div>
+          <div class="container gap-small">
             <label for="phone" class="bold">Phone: </label>
             <input class="text-input" type="tel" formControlName="phone" id="phone">
           </div>
