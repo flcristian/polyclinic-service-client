@@ -12,6 +12,8 @@ import {DatesUtility} from "../../utility/dates.utility";
 import {ConfirmPopup} from "primeng/confirmpopup";
 import {Time} from "../../schedules/models/time.model";
 import {ScheduleSlot} from "../../schedules/models/schedule-slot.model";
+import {UserScheduleTimesValidator} from "./user-schedule-times.validator";
+import {CreateScheduleRequest} from "../../schedules/models/create-schedule-request.model";
 
 @Component({
   selector: 'app-user-schedule',
@@ -159,6 +161,7 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
   }
   protected nextScheduleExists  = false;
   protected editNextSchedule = false;
+  protected addNextSchedule = false;
   protected days = ["monday", "tuesday", "wednesday", "thursday", "friday"]
 
   baseTime: Time = {hours:0, minutes: 0};
@@ -166,27 +169,27 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
     mondaySchedule: new FormGroup({
       startTime: new FormControl(this.baseTime, Validators.required),
       endTime: new FormControl(this.baseTime, Validators.required),
-    }),
+    }, [UserScheduleTimesValidator.validateTimes()]),
 
     tuesdaySchedule: new FormGroup({
       startTime: new FormControl(this.baseTime, Validators.required),
       endTime: new FormControl(this.baseTime, Validators.required),
-    }),
+    }, [UserScheduleTimesValidator.validateTimes()]),
 
     wednesdaySchedule: new FormGroup({
       startTime: new FormControl(this.baseTime, Validators.required),
       endTime: new FormControl(this.baseTime, Validators.required),
-    }),
+    }, [UserScheduleTimesValidator.validateTimes()]),
 
     thursdaySchedule: new FormGroup({
       startTime: new FormControl(this.baseTime, Validators.required),
       endTime: new FormControl(this.baseTime, Validators.required),
-    }),
+    }, [UserScheduleTimesValidator.validateTimes()]),
 
     fridaySchedule: new FormGroup({
       startTime: new FormControl(this.baseTime, Validators.required),
       endTime: new FormControl(this.baseTime, Validators.required),
-    }),
+    }, [UserScheduleTimesValidator.validateTimes()]),
   });
 
 
@@ -255,17 +258,18 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
     accept: () => {
       let request = this.createNewUpdateRequest();
       this.stateService.updateNextSchedule(request);
+      this.editNextSchedule = false
       }
     };
 
     this.confirmationService.confirm(confirmation);
   }
 
-  acceptUpdate(){
+  acceptPopup(){
     this.confirmPopup.accept()
   }
 
-  rejectUpdate() {
+  rejectPopup() {
     this.confirmPopup.reject()
   }
 
@@ -288,5 +292,35 @@ export class UserScheduleComponent implements OnInit, OnDestroy {
     };
   }
 
-  //addUpdateRequestValues(request: UpdateScheduleRequest, values: FormGroup)
+  createNextSchedule(event: Event){
+    const confirmation: Confirmation = {
+      target: event.target as EventTarget,
+      message: 'Are you sure you want to update this appointment?',
+      accept: () => {
+        let request = this.createNewAddRequest();
+        this.stateService.createNextSchedule(request);
+        this.editNextSchedule = false
+      }
+    };
+
+    this.confirmationService.confirm(confirmation);
+  }
+
+  createNewAddRequest(): CreateScheduleRequest{
+    let nextWeek = new Date()
+    nextWeek.setDate(nextWeek.getDate() + 7)
+
+    let scheduleTimes = this.getScheduleTimes() as Schedule
+
+    return {
+      doctorId: this.doctor.id,
+      year: nextWeek.getFullYear(),
+      weekNumber: DatesUtility.getWeekNumber(nextWeek),
+      mondaySchedule: scheduleTimes.mondaySchedule,
+      tuesdaySchedule: scheduleTimes.tuesdaySchedule,
+      wednesdaySchedule: scheduleTimes.wednesdaySchedule,
+      thursdaySchedule: scheduleTimes.thursdaySchedule,
+      fridaySchedule: scheduleTimes.fridaySchedule
+    };
+  }
 }

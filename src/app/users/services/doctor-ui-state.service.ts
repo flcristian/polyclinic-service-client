@@ -9,6 +9,7 @@ import {Schedule} from "../../schedules/models/schedule.model";
 import {ScheduleService} from "../../schedules/services/schedule.service";
 import {UpdateAppointmentRequest} from "../../appointments/models/update-appointment-request.model";
 import {UpdateScheduleRequest} from "../../schedules/models/update-schedule-request.model";
+import {CreateScheduleRequest} from "../../schedules/models/create-schedule-request.model";
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +49,7 @@ export class DoctorUiStateService {
   }
 
   updateNextSchedule(request: UpdateScheduleRequest){
-    this.setLoadingSchedule(true)
+    this.setLoadingNextSchedule(true)
     this.scheduleService.updateSchedule(request).subscribe({
       next: (newSchedule) => {
         this.setNextSchedule(newSchedule)
@@ -57,7 +58,22 @@ export class DoctorUiStateService {
         this.setError(error)
       },
       complete: () => {
-        this.setLoadingSchedule(false)
+        this.setLoadingNextSchedule(false)
+      }
+    })
+  }
+
+  createNextSchedule(request: CreateScheduleRequest){
+    this.setLoadingNextSchedule(true)
+    this.scheduleService.createSchedule(request).subscribe({
+      next: (newSchedule) => {
+        this.setNextSchedule(newSchedule)
+      },
+      error: (error) => {
+        this.setError(error)
+      },
+      complete: () => {
+        this.setLoadingNextSchedule(false)
       }
     })
   }

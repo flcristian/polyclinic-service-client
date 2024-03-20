@@ -24,7 +24,7 @@
       </section>
     </section>
 
-    <section *ngIf="nextScheduleExists" class="container gap-small">
+    <section *ngIf="nextScheduleExists; else noNextSchedule" class="container gap-small">
       <p-toggleButton [(ngModel)]="editNextSchedule" onLabel="Cancel" offLabel="Modify next week schedule"></p-toggleButton>
       <section class="item-card" *ngIf="!editNextSchedule; else modifyNextSchedule">
         <h2>Next Week Schedule</h2>
@@ -55,23 +55,16 @@
 
           <section formGroupName="{{day + 'Schedule'}}" *ngFor="let day of days">
             <h3>{{day | capitalize}}</h3>
-
             <div>
               <label for="{{day}}StartTime">Start Time: </label>
 
               <input class="datetime" type="time" formControlName="startTime" id="{{day}}StartTime">
-
-              <p-message *ngIf="nextScheduleForm.get(day + 'Schedule.startTime')?.touched && nextScheduleForm.get(day + 'Schedule.startTime')?.hasError('required')" severity="error" text="Start time is required."></p-message>
             </div>
-
             <div>
               <label for="{{day}}EndTime">End Time: </label>
-
               <input class="datetime" type="time" formControlName="endTime" id="{{day}}EndTime">
-
-              <p-message *ngIf="nextScheduleForm.get(day + 'Schedule.endTime')?.touched && nextScheduleForm.get(day + 'Schedule.endTime')?.hasError('required')" severity="error" text="End time is required."></p-message>
-              <p-message *ngIf="nextScheduleForm.get(day + 'Schedule.endTime')?.hasError('range')" severity="error" text="Start time must be before end time."></p-message>
             </div>
+            <p-message *ngIf="nextScheduleForm.get(day + 'Schedule')?.get('startTime')?.touched && nextScheduleForm.get(day + 'Schedule')?.get('endTime')?.touched && nextScheduleForm.get(day + 'Schedule')?.hasError('StartAfterEnd')" severity="error" text="Start time must be before end time."></p-message>
           </section>
           <section>
             <p-confirmPopup>
@@ -79,8 +72,8 @@
                 <section class="flex-column padding-small gap-small">
                   <span>{{ message.message }}</span>
                   <section class="flex-row gap-small">
-                    <button (click)="acceptUpdate()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
-                    <button (click)="rejectUpdate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+                    <button (click)="acceptPopup()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
+                    <button (click)="rejectPopup()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
                   </section>
                 </section>
               </ng-template>
@@ -90,5 +83,42 @@
         </form>
       </ng-template>
     </section>
+    <ng-template #noNextSchedule>
+      <h2>You don't have a schedule for the next week</h2>
+      <p-toggleButton [(ngModel)]="addNextSchedule" onLabel="Cancel" offLabel="Add next week schedule"></p-toggleButton>
+      <section *ngIf="addNextSchedule">
+        <form [formGroup]="nextScheduleForm" class="item-card">
+          <h2>Next Week Schedule</h2>
+
+          <section formGroupName="{{day + 'Schedule'}}" *ngFor="let day of days">
+            <h3>{{day | capitalize}}</h3>
+            <div>
+              <label for="{{day}}StartTime">Start Time: </label>
+
+              <input class="datetime" type="time" formControlName="startTime" id="{{day}}StartTime">
+            </div>
+            <div>
+              <label for="{{day}}EndTime">End Time: </label>
+              <input class="datetime" type="time" formControlName="endTime" id="{{day}}EndTime">
+            </div>
+            <p-message *ngIf="nextScheduleForm.get(day + 'Schedule')?.get('startTime')?.touched && nextScheduleForm.get(day + 'Schedule')?.get('endTime')?.touched && nextScheduleForm.get(day + 'Schedule')?.hasError('StartAfterEnd')" severity="error" text="Start time must be before end time."></p-message>
+          </section>
+          <section>
+            <p-confirmPopup>
+              <ng-template pTemplate="headless" let-message>
+                <section class="flex-column padding-small gap-small">
+                  <span>{{ message.message }}</span>
+                  <section class="flex-row gap-small">
+                    <button (click)="acceptPopup()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
+                    <button (click)="rejectPopup()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+                  </section>
+                </section>
+              </ng-template>
+            </p-confirmPopup>
+            <p-button (click)="createNextSchedule($event)" [disabled]="nextScheduleForm.invalid">Modify</p-button>
+          </section>
+        </form>
+      </section>
+    </ng-template>
   </section>
 </ng-container>

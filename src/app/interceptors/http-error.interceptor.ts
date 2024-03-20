@@ -5,6 +5,10 @@ import { catchError, Observable, throwError } from "rxjs";
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor{
+  ignoredMessages: string[] = [
+    "This schedule does not exist"
+  ]
+
   constructor(private messageService: MessageService){}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -12,6 +16,7 @@ export class HttpErrorInterceptor implements HttpInterceptor{
       .pipe(
         catchError((error: HttpErrorResponse) => {
           const errorMessage = this.getErrorMessage(error);
+
           this.displayError(error, errorMessage);
           return throwError(() => new Error(errorMessage))
         })
@@ -29,6 +34,11 @@ export class HttpErrorInterceptor implements HttpInterceptor{
 
   private displayError(error: HttpErrorResponse, errorMessage: string): void {
     const summary = `${error.status}`;
+
+    for(let i = 0; i < this.ignoredMessages.length; i++) {
+      if(errorMessage.includes(this.ignoredMessages[i])) return;
+    }
+
     this.messageService.add({
       severity: 'error',
       summary,

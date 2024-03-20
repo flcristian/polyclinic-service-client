@@ -6,10 +6,22 @@ import {formatDate, Time} from "@angular/common";
 })
 export class TimeStringPipe implements PipeTransform {
 
-  transform(value: Time): string {
+  transform(value: Time | string): string {
+    let time : Time;
+    if(typeof(value) === "string"){
+      let parts = value.split(':');
+      time = {
+        hours: parseInt(parts[0]),
+        minutes: parseInt(parts[1])
+      };
+    }
+    else {
+      time = value;
+    }
+
     let timeDate = new Date()
-    timeDate.setHours(value.hours)
-    timeDate.setMinutes(value.minutes)
+    timeDate.setHours(time.hours)
+    timeDate.setMinutes(time.minutes)
 
     return formatDate(timeDate, "HH:mm", 'en-US');
   }
