@@ -1,0 +1,10 @@
+<div class="container padding-medium flex-column gap-medium">
+  <p-button (click)="navigateToAppointments()">Back</p-button>
+  <h1>Appointment Details</h1>
+  <app-appointment [appointment]="appointment"></app-appointment>
+
+  <section *ngIf="appointment && appointment.userAppointments" class="flex-column gap-small">
+    <app-user [user]="getPatient(appointment.userAppointments)"></app-user>
+  </section>
+  <p-toast></p-toast>
+</div >

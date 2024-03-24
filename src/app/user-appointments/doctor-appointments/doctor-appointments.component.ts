@@ -96,8 +96,8 @@ export class DoctorAppointmentsComponent implements OnInit, OnDestroy {
     })
   }
 
-  private navigateToAppointment(id: number){
-    
+  navigateToAppointment(id: number){
+    this.router.navigate([`/doctor-ui/appointment/`, id])
   }
 
   private getFilteredAppointments(startDate: Date, endDate: Date): Subscription{

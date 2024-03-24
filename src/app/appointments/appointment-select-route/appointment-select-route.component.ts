@@ -56,7 +56,6 @@ export class AppointmentSelectRouteComponent implements OnInit, OnDestroy {
     this.subscriptions.add(
       this.appointmentState.getAppointment(this.appointmentId).subscribe({
         next: (appointment) => {
-          console.log(appointment)
           this.appointment = appointment
           this.appointmentState.setSelectedAppointment(appointment)
         },

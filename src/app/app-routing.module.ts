@@ -8,6 +8,9 @@ import {PersonalDetailsComponent} from "./users/personal-details/personal-detail
 import {UserScheduleComponent} from "./users/user-schedule/user-schedule.component";
 import {ChangePasswordComponent} from "./users/change-password/change-password.component";
 import {DoctorAppointmentsComponent} from "./user-appointments/doctor-appointments/doctor-appointments.component";
+import {
+  DoctorAppointmentPreviewComponent
+} from "./users/doctor-appointment-preview/doctor-appointment-preview.component";
 
 const routes: Routes = [
   { path: '', redirectTo: '/doctor-ui', pathMatch: 'full' },
@@ -18,7 +21,8 @@ const routes: Routes = [
       { path: 'personal-details', component: PersonalDetailsComponent },
       { path: 'user-schedule', component: UserScheduleComponent },
       { path: 'change-password', component: ChangePasswordComponent },
-      { path: 'appointment-list', component: DoctorAppointmentsComponent }
+      { path: 'appointment-list', component: DoctorAppointmentsComponent },
+      { path: 'appointment/:id', component: DoctorAppointmentPreviewComponent }
     ]
   },
   { path: 'appointments', component: AppointmentListComponent },

@@ -38,6 +38,7 @@ import {TimeStringPipe} from "./pipes/custom-date/time-string.pipe";
 import {CalendarModule} from "primeng/calendar";
 import { CapitalizePipe } from './pipes/strings/capitalize.pipe';
 import { DoctorAppointmentsComponent } from './user-appointments/doctor-appointments/doctor-appointments.component';
+import { DoctorAppointmentPreviewComponent } from './users/doctor-appointment-preview/doctor-appointment-preview.component';
 
 @NgModule({
   declarations: [
@@ -56,7 +57,8 @@ import { DoctorAppointmentsComponent } from './user-appointments/doctor-appointm
     ChangePasswordComponent,
     CapitalizePipe,
     DoctorAppointmentsComponent,
-    DoctorAppointmentsComponent
+    DoctorAppointmentsComponent,
+    DoctorAppointmentPreviewComponent
   ],
     imports: [
         BrowserModule,
