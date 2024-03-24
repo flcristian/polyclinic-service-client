@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable} from "rxjs";
+import {BehaviorSubject, map, Observable} from "rxjs";
 import {User} from "../models/user.model";
 import {UserService} from "./user.service";
 import {CreateUserRequest} from "../models/create-user-request.model";
@@ -10,6 +10,8 @@ import {ScheduleService} from "../../schedules/services/schedule.service";
 import {UpdateAppointmentRequest} from "../../appointments/models/update-appointment-request.model";
 import {UpdateScheduleRequest} from "../../schedules/models/update-schedule-request.model";
 import {CreateScheduleRequest} from "../../schedules/models/create-schedule-request.model";
+import {Appointment} from "../../appointments/models/appointment.model";
+import {AppointmentService} from "../../appointments/services/appointment.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,9 +19,11 @@ import {CreateScheduleRequest} from "../../schedules/models/create-schedule-requ
 export class DoctorUiStateService {
   private stateSubject = new BehaviorSubject<DoctorUiState>({
     doctor: null,
+    appointments: [],
     schedule: null,
     nextSchedule: null,
     loadingDoctor: false,
+    loadingAppointments: false,
     loadingSchedule: false,
     loadingNextSchedule: false,
     error: null
@@ -28,6 +32,7 @@ export class DoctorUiStateService {
 
   constructor(
     private userService: UserService,
+    private appointmentService: AppointmentService,
     private scheduleService: ScheduleService
   ) { }
 
@@ -36,6 +41,21 @@ export class DoctorUiStateService {
   getUser(id: number){
     this.setLoadingDoctor(true)
     return this.userService.getUser(id)
+  }
+
+  getAppointments(doctorId: number){
+    this.setLoadingAppontments(true);
+    return this.appointmentService.getAppointmentsByUserId(doctorId)
+  }
+
+  getFilteredAppointments(doctorId: number, startDate: Date, endDate: Date){
+    return this.getAppointments(doctorId).pipe(
+      map(appointments => {
+        return appointments.filter(appointment => {
+          return appointment.startDate >= startDate && appointment.endDate <= endDate
+        })
+      })
+    )
   }
 
   getSchedule(doctorId: number, date: Date){
@@ -99,6 +119,10 @@ export class DoctorUiStateService {
     this.setState({doctor})
   }
 
+  setAppointments(appointments: Appointment[]){
+    this.setState({appointments});
+  }
+
   setSchedule(schedule: Schedule){
     this.setState({schedule})
   }
@@ -109,6 +133,10 @@ export class DoctorUiStateService {
 
   setLoadingDoctor(loadingDoctor: boolean) {
     this.setState({loadingDoctor})
+  }
+
+  setLoadingAppontments(loadingAppointments: boolean){
+    this.setState({loadingAppointments});
   }
 
   setLoadingSchedule(loadingSchedule: boolean) {

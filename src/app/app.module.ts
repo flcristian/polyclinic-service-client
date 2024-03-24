@@ -32,12 +32,12 @@ import {MenuModule} from "primeng/menu";
 import { PersonalDetailsComponent } from './users/personal-details/personal-details.component';
 import { UserScheduleComponent } from './users/user-schedule/user-schedule.component';
 import { ChangePasswordComponent } from './users/change-password/change-password.component';
-import { UserAppointmentListComponent } from './user-appointments/user-appointment-list/user-appointment-list.component';
 import {CascadeSelectModule} from "primeng/cascadeselect";
 import {DropdownModule} from "primeng/dropdown";
 import {TimeStringPipe} from "./pipes/custom-date/time-string.pipe";
 import {CalendarModule} from "primeng/calendar";
 import { CapitalizePipe } from './pipes/strings/capitalize.pipe';
+import { DoctorAppointmentsComponent } from './user-appointments/doctor-appointments/doctor-appointments.component';
 
 @NgModule({
   declarations: [
@@ -54,8 +54,9 @@ import { CapitalizePipe } from './pipes/strings/capitalize.pipe';
     PersonalDetailsComponent,
     UserScheduleComponent,
     ChangePasswordComponent,
-    UserAppointmentListComponent,
-    CapitalizePipe
+    CapitalizePipe,
+    DoctorAppointmentsComponent,
+    DoctorAppointmentsComponent
   ],
     imports: [
         BrowserModule,

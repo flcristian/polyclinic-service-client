@@ -5,6 +5,7 @@ import {User} from "../models/user.model";
 import {DoctorUiStateService} from "../services/doctor-ui-state.service";
 import {Subscription} from "rxjs";
 import {Schedule} from "../../schedules/models/schedule.model";
+import {Appointment} from "../../appointments/models/appointment.model";
 
 @Component({
   selector: 'app-doctor-ui',
@@ -82,6 +83,20 @@ export class DoctorUiComponent implements OnInit {
         },
         complete: () => {
           this.stateService.setLoadingDoctor(false)
+        }
+      })
+    )
+
+    this.subscriptions.add(
+      this.stateService.getAppointments(3).subscribe({
+        next: (appointments: Appointment[]) => {
+          this.stateService.setAppointments(appointments)
+        },
+        error: () => {
+          this.stateService.setLoadingAppontments(false)
+        },
+        complete: () => {
+          this.stateService.setLoadingAppontments(false)
         }
       })
     )
