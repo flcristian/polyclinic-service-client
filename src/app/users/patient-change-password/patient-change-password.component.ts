@@ -2,18 +2,18 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {User} from "../models/user.model";
-import {DoctorUiStateService} from "../services/doctor-ui-state.service";
+import {PatientUiStateService} from "../services/patient-ui-state.service";
 import {Confirmation, ConfirmationService} from "primeng/api";
 import {UpdateUserRequest} from "../models/update-user-request.model";
 import {ConfirmPopup} from "primeng/confirmpopup";
 
 @Component({
-  selector: 'app-change-password',
-  templateUrl: './change-password.component.html'
+  selector: 'app-patient-change-password',
+  templateUrl: './patient-change-password.component.html'
 })
-export class ChangePasswordComponent implements OnInit, OnDestroy {
+export class PatientChangePasswordComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
-  protected doctor: User | null = null;
+  protected patient: User | null = null;
   protected passwordForm = new FormGroup({
     password: new FormControl('', [
       Validators.required,
@@ -24,22 +24,22 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   @ViewChild(ConfirmPopup) confirmPopup!: ConfirmPopup;
 
   constructor(
-    private stateService: DoctorUiStateService,
+    private stateService: PatientUiStateService,
     private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
-    this.subscriptions.add(this.getDoctor())
+    this.subscriptions.add(this.getPatient())
   }
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe()
   }
 
-  getDoctor() {
+  getPatient() {
     return this.stateService.state$.subscribe({
       next: (data) => {
-        this.doctor = data.doctor;
+        this.patient = data.patient;
       },
       error: (error) => {
         this.stateService.setError(error);
@@ -47,20 +47,20 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateDoctor(event: Event) {
+  updatePatient(event: Event) {
     const confirmation: Confirmation = {
       target: event.target as EventTarget,
       message: 'Are you sure you want to update your details?',
       accept: () => {
         let request: UpdateUserRequest = {
-          id: this.doctor?.id as number,
-          name: this.doctor?.name as string,
-          age: this.doctor?.age as number,
-          gender: this.doctor?.gender as string,
-          email: this.doctor?.email as string,
-          phone: this.doctor?.phone as string,
+          id: this.patient?.id as number,
+          name: this.patient?.name as string,
+          age: this.patient?.age as number,
+          gender: this.patient?.gender as string,
+          email: this.patient?.email as string,
+          phone: this.patient?.phone as string,
           password: this.passwordForm.value.password as string,
-          type: this.doctor?.type as number
+          type: this.patient?.type as number
         };
 
         this.stateService.updateUser(request);

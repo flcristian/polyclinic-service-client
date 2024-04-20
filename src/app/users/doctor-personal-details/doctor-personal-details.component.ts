@@ -9,10 +9,10 @@ import { UpdateUserRequest } from "../models/update-user-request.model";
 import { ConfirmPopup } from "primeng/confirmpopup";
 
 @Component({
-  selector: 'app-personal-details',
-  templateUrl: './personal-details.component.html'
+  selector: 'app-doctor-personal-details',
+  templateUrl: './doctor-personal-details.component.html'
 })
-export class PersonalDetailsComponent implements OnInit, OnDestroy {
+export class DoctorPersonalDetailsComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   protected editBase: boolean = false;
   protected editContact: boolean = false;

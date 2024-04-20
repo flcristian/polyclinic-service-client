@@ -9,7 +9,7 @@ import {UpdateUserRequest} from "../models/update-user-request.model";
   providedIn: 'root'
 })
 export class UserService {
-  private server: string = "http://localhost:5275/api/v1/Users";
+  private server: string = "http://localhost:5275/api/v1/User";
 
   constructor(private http: HttpClient) { }
 

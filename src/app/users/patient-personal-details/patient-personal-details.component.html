@@ -1,0 +1,113 @@
+<section class="container gap-medium padding-medium">
+  <section class="item-card" *ngIf="!editBase; else editBaseToggled">
+    <h2>Base Information</h2>
+    <section>
+      <span class="bold color-secondary">Name: </span>
+      <span>{{patient?.name}}</span>
+    </section>
+    <section>
+      <span class="bold color-secondary">Age: </span>
+      <span>{{patient?.age}}</span>
+    </section>
+    <section>
+      <span class="bold color-secondary">Gender: </span>
+      <span>{{patient?.gender}}</span>
+    </section>
+    <p-toggleButton [(ngModel)]="editBase" onIcon="pi pi-times" onLabel="Cancel" offIcon="pi pi-check" offLabel="Edit"></p-toggleButton>
+  </section>
+  <ng-template #editBaseToggled>
+    <section class="form-card">
+      <h2>Edit Base Information</h2>
+      <form [formGroup]="baseForm" class="container gap-small">
+        <div class="flex-row-align-center gap-small">
+          <div class="container gap-small">
+            <label for="name" class="bold">Name: </label>
+            <input class="text-input" type="text" formControlName="name" id="name">
+          </div>
+          <p-message *ngIf="baseForm.get('name')?.touched&&baseForm.get('name')!.hasError('required')" severity="error" text="Name is required."></p-message>
+          <p-message *ngIf="baseForm.get('name')?.touched&&baseForm.get('name')!.hasError('minlength')" severity="error" text="Name must have at least 2 characters."></p-message>
+          <p-message *ngIf="baseForm.get('name')?.touched&&baseForm.get('name')!.hasError('maxlength')" severity="error" text="Name must have at maximum 128 characters."></p-message>
+        </div>
+        <div class="flex-row-align-center gap-small">
+          <div class="container gap-small">
+            <label for="age" class="bold">Age: </label>
+            <input class="text-input" type="number" formControlName="age" id="age">
+          </div>
+          <p-message *ngIf="baseForm.get('age')?.touched&&baseForm.get('age')!.hasError('required')" severity="error" text="Age is required."></p-message>
+          <p-message *ngIf="baseForm.get('age')?.touched&&baseForm.get('age')!.hasError('min')" severity="error" text="Age must be positive."></p-message>
+        </div>
+        <div class="flex-row-align-center gap-small">
+          <div class="container gap-small">
+            <label for="gender" class="bold">Gender: </label>
+            <p-dropdown formControlName="gender" [options]="genders" id="gender"></p-dropdown>
+          </div>
+        </div>
+        <section>
+          <p-confirmPopup>
+            <ng-template pTemplate="headless" let-message>
+              <section class="flex-column padding-small gap-small">
+                <span>{{ message.message }}</span>
+                <section class="flex-row gap-small">
+                  <button (click)="acceptUpdate()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
+                  <button (click)="rejectUpdate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+                </section>
+              </section>
+            </ng-template>
+          </p-confirmPopup>
+          <p-button (click)="updatePatient($event)" [disabled]="baseForm.invalid">Update</p-button>
+        </section>
+      </form>
+      <p-toggleButton [(ngModel)]="editBase" onIcon="pi pi-times" onLabel="Cancel" offIcon="pi pi-check" offLabel="Edit"></p-toggleButton>
+    </section>
+  </ng-template>
+  <section class="item-card" *ngIf="!editContact; else editContactToggled">
+    <h2>Contact Information</h2>
+    <section>
+      <span class="bold color-secondary">Email: </span>
+      <span>{{patient?.email}}</span>
+    </section>
+    <section>
+      <span class="bold color-secondary">Phone: </span>
+      <span>{{patient?.phone}}</span>
+    </section>
+    <p-toggleButton [(ngModel)]="editContact" onIcon="pi pi-times" onLabel="Cancel" offIcon="pi pi-check" offLabel="Edit"></p-toggleButton>
+  </section>
+  <ng-template #editContactToggled>
+    <section class="form-card">
+      <h2>Edit Contact Information</h2>
+      <form [formGroup]="contactForm" class="container gap-small">
+        <div class="flex-row-align-center gap-small">
+          <div class="container gap-small">
+            <label for="email" class="bold">Email: </label>
+            <input class="text-input" type="text" formControlName="email" id="email">
+          </div>
+          <p-message *ngIf="contactForm.get('email')?.touched&&contactForm.get('email')!.hasError('required')" severity="error" text="Email is required."></p-message>
+          <p-message *ngIf="contactForm.get('email')?.touched&&contactForm.get('email')!.hasError('email')" severity="error" text="Email is invalid."></p-message>
+        </div>
+        <div class="flex-row-align-center gap-small">
+          <div class="container gap-small">
+            <label for="phone" class="bold">Phone: </label>
+            <input class="text-input" type="tel" formControlName="phone" id="phone">
+          </div>
+          <p-message *ngIf="contactForm.get('phone')?.touched&&contactForm.get('phone')!.hasError('required')" severity="error" text="Phone number is required."></p-message>
+          <p-message *ngIf="contactForm.get('phone')?.touched&&contactForm.get('phone')!.hasError('pattern')" severity="error" text="Phone number is invalid."></p-message>
+        </div>
+        <section>
+          <p-confirmPopup>
+            <ng-template pTemplate="headless" let-message>
+              <section class="flex-column padding-small gap-small">
+                <span>{{ message.message }}</span>
+                <section class="flex-row gap-small">
+                  <button (click)="acceptUpdate()" pButton label="Confirm" class="p-button-sm p-button-outlined"></button>
+                  <button (click)="rejectUpdate()" pButton label="Cancel" class="p-button-sm p-button-text"></button>
+                </section>
+              </section>
+            </ng-template>
+          </p-confirmPopup>
+          <p-button (click)="updatePatient($event)" [disabled]="contactForm.invalid">Update</p-button>
+        </section>
+      </form>
+      <p-toggleButton [(ngModel)]="editContact" onIcon="pi pi-times" onLabel="Cancel" offIcon="pi pi-check" offLabel="Edit"></p-toggleButton>
+    </section>
+  </ng-template>
+</section>

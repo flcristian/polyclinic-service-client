@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import  { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -29,9 +29,9 @@ import {
 } from "./appointments/appointment-select-subject/appointment-select-subject.component";
 import { DoctorUiComponent } from './users/doctor-ui/doctor-ui.component';
 import {MenuModule} from "primeng/menu";
-import { PersonalDetailsComponent } from './users/personal-details/personal-details.component';
+import { DoctorPersonalDetailsComponent } from './users/doctor-personal-details/doctor-personal-details.component';
 import { UserScheduleComponent } from './users/user-schedule/user-schedule.component';
-import { ChangePasswordComponent } from './users/change-password/change-password.component';
+import { DoctorChangePasswordComponent } from './users/doctor-change-password/doctor-change-password.component';
 import {CascadeSelectModule} from "primeng/cascadeselect";
 import {DropdownModule} from "primeng/dropdown";
 import {TimeStringPipe} from "./pipes/custom-date/time-string.pipe";
@@ -39,6 +39,13 @@ import {CalendarModule} from "primeng/calendar";
 import { CapitalizePipe } from './pipes/strings/capitalize.pipe';
 import { DoctorAppointmentsComponent } from './user-appointments/doctor-appointments/doctor-appointments.component';
 import { DoctorAppointmentPreviewComponent } from './users/doctor-appointment-preview/doctor-appointment-preview.component';
+import { PatientUiComponent } from './users/patient-ui/patient-ui.component';
+import { PatientAppointmentsComponent } from './user-appointments/patient-appointments/patient-appointments.component';
+import {
+  PatientAppointmentPreviewComponent
+} from "./users/patient-appointment-preview/patient-appointment-preview.component";
+import { PatientChangePasswordComponent } from './users/patient-change-password/patient-change-password.component';
+import { PatientPersonalDetailsComponent } from './users/patient-personal-details/patient-personal-details.component';
 
 @NgModule({
   declarations: [
@@ -52,13 +59,18 @@ import { DoctorAppointmentPreviewComponent } from './users/doctor-appointment-pr
     LocaleDateStringPipe,
     TimeStringPipe,
     DoctorUiComponent,
-    PersonalDetailsComponent,
+    DoctorPersonalDetailsComponent,
     UserScheduleComponent,
-    ChangePasswordComponent,
+    DoctorChangePasswordComponent,
     CapitalizePipe,
     DoctorAppointmentsComponent,
     DoctorAppointmentsComponent,
-    DoctorAppointmentPreviewComponent
+    DoctorAppointmentPreviewComponent,
+    PatientUiComponent,
+    PatientAppointmentsComponent,
+    PatientAppointmentPreviewComponent,
+    PatientChangePasswordComponent,
+    PatientPersonalDetailsComponent
   ],
     imports: [
         BrowserModule,

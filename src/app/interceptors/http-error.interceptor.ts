@@ -5,22 +5,43 @@ import { catchError, Observable, throwError } from "rxjs";
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor{
-  ignoredMessages: string[] = [
-    "This schedule does not exist"
-  ]
-
   constructor(private messageService: MessageService){}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request)
       .pipe(
+
         catchError((error: HttpErrorResponse) => {
           const errorMessage = this.getErrorMessage(error);
-
-          this.displayError(error, errorMessage);
+          if(!this.ignoreMessage(error)){
+            this.displayError(error, errorMessage);
+          }
           return throwError(() => new Error(errorMessage))
         })
       )
+  }
+
+  ignoredMessages: string[] = [
+    "This schedule does not exist",
+    "There are no appointments."
+  ]
+
+  private ignoreMessage(error: HttpErrorResponse): boolean {
+    let msg: string;
+
+    if(error.error instanceof ErrorEvent){
+      msg = error.error.message;
+    }
+    else{
+      msg = error.error;
+    }
+
+    for(let i = 0; i < this.ignoredMessages.length; i++){
+      if(this.ignoredMessages[i] === msg){
+        return true;
+      }
+    }
+    return false;
   }
 
   private getErrorMessage(error: HttpErrorResponse): string{
@@ -34,10 +55,6 @@ export class HttpErrorInterceptor implements HttpInterceptor{
 
   private displayError(error: HttpErrorResponse, errorMessage: string): void {
     const summary = `${error.status}`;
-
-    for(let i = 0; i < this.ignoredMessages.length; i++) {
-      if(errorMessage.includes(this.ignoredMessages[i])) return;
-    }
 
     this.messageService.add({
       severity: 'error',

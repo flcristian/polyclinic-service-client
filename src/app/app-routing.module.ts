@@ -4,25 +4,42 @@ import {AppointmentListComponent} from "./appointments/appointment-list/appointm
 import {AppointmentSelectRouteComponent} from "./appointments/appointment-select-route/appointment-select-route.component";
 import {AppointmentCreateComponent} from "./appointments/appointment-create/appointment-create.component";
 import {DoctorUiComponent} from "./users/doctor-ui/doctor-ui.component";
-import {PersonalDetailsComponent} from "./users/personal-details/personal-details.component";
+import {DoctorPersonalDetailsComponent} from "./users/doctor-personal-details/doctor-personal-details.component";
 import {UserScheduleComponent} from "./users/user-schedule/user-schedule.component";
-import {ChangePasswordComponent} from "./users/change-password/change-password.component";
+import {DoctorChangePasswordComponent} from "./users/doctor-change-password/doctor-change-password.component";
 import {DoctorAppointmentsComponent} from "./user-appointments/doctor-appointments/doctor-appointments.component";
 import {
   DoctorAppointmentPreviewComponent
 } from "./users/doctor-appointment-preview/doctor-appointment-preview.component";
+import {
+  PatientAppointmentPreviewComponent
+} from "./users/patient-appointment-preview/patient-appointment-preview.component";
+import {PatientAppointmentsComponent} from "./user-appointments/patient-appointments/patient-appointments.component";
+import {PatientUiComponent} from "./users/patient-ui/patient-ui.component";
+import {PatientChangePasswordComponent} from "./users/patient-change-password/patient-change-password.component";
+import {PatientPersonalDetailsComponent} from "./users/patient-personal-details/patient-personal-details.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: '/doctor-ui', pathMatch: 'full' },
+  { path: '', redirectTo: '/patient-ui', pathMatch: 'full' },
   {
     path : 'doctor-ui',
     component: DoctorUiComponent,
     children: [
-      { path: 'personal-details', component: PersonalDetailsComponent },
+      { path: 'personal-details', component: DoctorPersonalDetailsComponent },
       { path: 'user-schedule', component: UserScheduleComponent },
-      { path: 'change-password', component: ChangePasswordComponent },
+      { path: 'change-password', component: DoctorChangePasswordComponent },
       { path: 'appointment-list', component: DoctorAppointmentsComponent },
       { path: 'appointment/:id', component: DoctorAppointmentPreviewComponent }
+    ]
+  },
+  {
+    path : 'patient-ui',
+    component: PatientUiComponent,
+    children: [
+      { path: 'personal-details', component: PatientPersonalDetailsComponent },
+      { path: 'change-password', component: PatientChangePasswordComponent },
+      { path: 'appointment-list', component: PatientAppointmentsComponent },
+      { path: 'appointment/:id', component: PatientAppointmentPreviewComponent }
     ]
   },
   { path: 'appointments', component: AppointmentListComponent },
